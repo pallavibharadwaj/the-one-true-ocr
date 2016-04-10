@@ -39,19 +39,22 @@ print("After detecting Contours")
 cv2.waitKey(0)
 segments= segments_to_numpy( [cv2.boundingRect(c) for c in contours] )
 ''' Convert each segment to x,y,w,h (4-element tuple for numpy)'''
-
+draw_segments(copy,segments)
+'''Draw the segments on the copy image (cant add color to greyscaled image)'''
+cv2.imshow('Display',copy)
+print("After Segmentation")
+cv2.waitKey(0)
 #Is removing unnecessary segments from the segment list required?
-
 count=0 #counting number of segments within a given segment
 #Finding the outer bounding box to find segments within a segment 
 xmin,ymin,wmin,hmin= numpy.amin(segments, axis=0) 
 xmax,ymax,wmax,hmax= numpy.amax(segments, axis=0) 
-euler_number_list=[]
-
 print "number of segments:{}".format(len(segments)) #number of segments for reference and confirmation
-
+print "Feature Data: Euler Number, Horizontal Mean, Vertical Mean"
 count=0
+feature_list =[]
 for each_segment in segments :
+	#Finding the Euler Number
 	flag=0
 	x1,y1,w1,h1=each_segment
 	if (each_segment==[xmin,ymin,wmax,hmax]).all():
@@ -66,61 +69,30 @@ for each_segment in segments :
 			#print "okay"
 			flag=flag+1
 			count=count+1
-	euler_number_list.append(1-flag)
-print count
+	euler_number=1-flag
 
-print "EULER LIST"
-print euler_number_list
-
-#x,y,w,h already there
-#will push the number of on pixels by 12 maybe
-#Will push all the features into a numpy array later
-
-#6th and 7th) horizontal mean list and vertical mean list
-
-
-horizontal_mean_list=[]
-vertical_mean_list=[]
-for segment in segments :
+	#horizontal mean list and vertical mean list
 	horizontal_sum=0
 	vertical_sum=0
-	x,y,w,h=segment
-
+	x,y,w,h=each_segment
 	#center of the segment
 	segment_centres=x+w/2,y+h/2
 	central_y_axis=x+w/2 # the line is where x = 0
 	central_x_axis=y+h/2 # the line is where y = 0
-	#print "{} {}".format(center_x,center_y)
-
 	for i in range(x, x+w) :
 		for j in  range(y, y+h) :
 			pixel_intensity= image[j,i]	#white(255) or black(0)
 			#print pixel_intensity
 			#if the pixel is black, find distance from the segment center
 			if pixel_intensity==0 :
-				horizontal_dist=i - central_y_axis	#negative for left and positive for right of center
+				horizontal_dist=i- central_y_axis	#negative for left and positive for right of center
 				horizontal_sum+=horizontal_dist	#negative if left heavy
-				vertical_dist=central_x_axis - j	#positive for up and negative for down of center
+				vertical_dist=central_x_axis- j	#positive for up and negative for down of center
 				vertical_sum+=vertical_dist		#positive if up heavy
 	horizontal_mean=horizontal_sum/w           #divide by width of the segment
 	vertical_mean=vertical_sum/h               #divide by height of the segment
-	horizontal_mean_list.append(horizontal_mean)	
-	vertical_mean_list.append(vertical_mean)
-
-#Removing the data for the large segment that encloses the entire image
-horizontal_mean_list.pop()
-vertical_mean_list.pop()
-
-print "HORIZONTAL MEAN LIST"
-print len(horizontal_mean_list)
-print horizontal_mean_list
-print "VERTICAL MEAN LIST"
-print len(vertical_mean_list)
-print vertical_mean_list
-
-draw_segments(copy,segments)
-'''Draw the segments on the copy image (cant add color to greyscaled image)'''
-cv2.imshow('Display',copy)
-print("After Segmentation")
+	# Converting all the feature data into a tuple
+	feature_list.append([euler_number,horizontal_mean,vertical_mean])
+print feature_list
 cv2.waitKey(0)
 cv2.destroyAllWindows()
