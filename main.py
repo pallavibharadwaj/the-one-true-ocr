@@ -78,41 +78,39 @@ print euler_number_list
 
 #6th and 7th) horizontal mean list and vertical mean list
 
-#finding number of rows and columns in the image to deal with out-of-bounds
-no_of_rows,no_of_cols=image.shape
-print "No of rows in the image: {}".format(no_of_rows)
-print "No of columns in the image: {}".format(no_of_cols)
 
 horizontal_mean_list=[]
 vertical_mean_list=[]
 for segment in segments :
-	horizontal_mean=0
-	vertical_mean=0
+	horizontal_sum=0
+	vertical_sum=0
 	x,y,w,h=segment
 
 	#center of the segment
-	segment_centers=(x+(x+w))/2,(y+(y+h))/2
-	center_x=(x+(x+w))/2
-	center_y=(y+(y+h))/2
+	segment_centres=x+w/2,y+h/2
+	central_y_axis=x+w/2 # the line is where x = 0
+	central_x_axis=y+h/2 # the line is where y = 0
 	#print "{} {}".format(center_x,center_y)
 
 	for i in range(x, x+w) :
 		for j in  range(y, y+h) :
-			#verifying if the position is within the range
-			if i<no_of_rows and j<no_of_cols :	
-				pixel_intensity= image[i,j]	#white(255) or black(0)
-				#print pixel_intensity
-				#if the pixel is black, find distance from the segment center
-				if pixel_intensity==0 :
-					horizontal_dist=i-center_x	#negative for left and positive for right of center
-					horizontal_mean+=horizontal_dist	#negative if left heavy
-					vertical_dist=j-center_y	#positive for up and negative for down of center
-					vertical_mean+=vertical_dist		#positive if up heavy
-	horizontal_mean=horizontal_mean/w           #divide by width of the segment
-	vertical_mean=vertical_mean/h               #divide by height of the segment
+			pixel_intensity= image[j,i]	#white(255) or black(0)
+			#print pixel_intensity
+			#if the pixel is black, find distance from the segment center
+			if pixel_intensity==0 :
+				horizontal_dist=i - central_y_axis	#negative for left and positive for right of center
+				horizontal_sum+=horizontal_dist	#negative if left heavy
+				vertical_dist=central_x_axis - j	#positive for up and negative for down of center
+				vertical_sum+=vertical_dist		#positive if up heavy
+	horizontal_mean=horizontal_sum/w           #divide by width of the segment
+	vertical_mean=vertical_sum/h               #divide by height of the segment
 	horizontal_mean_list.append(horizontal_mean)	
 	vertical_mean_list.append(vertical_mean)
-		
+
+#Removing the data for the large segment that encloses the entire image
+horizontal_mean_list.pop()
+vertical_mean_list.pop()
+
 print "HORIZONTAL MEAN LIST"
 print len(horizontal_mean_list)
 print horizontal_mean_list
