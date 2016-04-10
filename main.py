@@ -48,6 +48,8 @@ xmin,ymin,wmin,hmin= numpy.amin(segments, axis=0)
 xmax,ymax,wmax,hmax= numpy.amax(segments, axis=0) 
 euler_number_list=[]
 
+print "number of segments:{}".format(len(segments)) #number of segments for reference and confirmation
+
 count=0
 for each_segment in segments :
 	flag=0
@@ -73,6 +75,50 @@ print euler_number_list
 #x,y,w,h already there
 #will push the number of on pixels by 12 maybe
 #Will push all the features into a numpy array later
+
+#6th and 7th) horizontal mean list and vertical mean list
+
+#finding number of rows and columns in the image to deal with out-of-bounds
+no_of_rows,no_of_cols=image.shape
+print "No of rows in the image: {}".format(no_of_rows)
+print "No of columns in the image: {}".format(no_of_cols)
+
+horizontal_mean_list=[]
+vertical_mean_list=[]
+for segment in segments :
+	horizontal_mean=0
+	vertical_mean=0
+	x,y,w,h=segment
+
+	#center of the segment
+	segment_centers=(x+(x+w))/2,(y+(y+h))/2
+	center_x=(x+(x+w))/2
+	center_y=(y+(y+h))/2
+	#print "{} {}".format(center_x,center_y)
+
+	for i in range(x, x+w) :
+		for j in  range(y, y+h) :
+			#verifying if the position is within the range
+			if i<no_of_rows and j<no_of_cols :	
+				pixel_intensity= image[i,j]	#white(255) or black(0)
+				#print pixel_intensity
+				#if the pixel is black, find distance from the segment center
+				if pixel_intensity==0 :
+					horizontal_dist=i-center_x	#negative for left and positive for right of center
+					horizontal_mean+=horizontal_dist	#negative if left heavy
+					vertical_dist=j-center_y	#positive for up and negative for down of center
+					vertical_mean+=vertical_dist		#positive if up heavy
+	horizontal_mean=horizontal_mean/w           #divide by width of the segment
+	vertical_mean=vertical_mean/h               #divide by height of the segment
+	horizontal_mean_list.append(horizontal_mean)	
+	vertical_mean_list.append(vertical_mean)
+		
+print "HORIZONTAL MEAN LIST"
+print len(horizontal_mean_list)
+print horizontal_mean_list
+print "VERTICAL MEAN LIST"
+print len(vertical_mean_list)
+print vertical_mean_list
 
 draw_segments(copy,segments)
 '''Draw the segments on the copy image (cant add color to greyscaled image)'''
