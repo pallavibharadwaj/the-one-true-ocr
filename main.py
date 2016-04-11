@@ -72,27 +72,69 @@ for each_segment in segments :
 	euler_number=1-flag
 
 	#horizontal mean list and vertical mean list
-	horizontal_sum=0
-	vertical_sum=0
+	horizontal_sum=0.0
+	vertical_sum=0.0
+	horizontal_square_sum=0.0
+	vertical_square_sum=0.0
+	xy_var_sum=0.0
+	on_pixel=0.0
+	xxy_var_sum=0.0
+	yyx_var_sum=0.0
+	horizontal_edge_count=0.0
+	vertical_edge_count=0.0
+	horizontal_edge_dist_sum=0.0
+	vertical_edge_dist_sum=0.0
 	x,y,w,h=each_segment
 	#center of the segment
 	segment_centres=x+w/2,y+h/2
 	central_y_axis=x+w/2 # the line is where x = 0
 	central_x_axis=y+h/2 # the line is where y = 0
-	for i in range(x, x+w) :
-		for j in  range(y, y+h) :
-			pixel_intensity= image[j,i]	#white(255) or black(0)
+	for i in range(y, y+h) :
+		for j in  range(x, x+w) :
+			pixel_intensity= image[i,j]	#white(255) or black(0)
 			#print pixel_intensity
 			#if the pixel is black, find distance from the segment center
 			if pixel_intensity==0 :
+				on_pixel+=1
+				if image[i-1][j]==255 :
+					#print "horizontal edge"
+					horizontal_edge_count+=1
+					horizontal_edge_dist=i-central_y_axis
+					horizontal_edge_dist_sum+=horizontal_edge_dist
+					horizontal_edge_dist_mean=horizontal_square_sum/horizontal_edge_count
+					print horizontal_edge_dist_sum, horizontal_edge_dist_mean
+				if image[i][j-1]==255 :
+					#print "vertical edge"
+					vertical_edge_count+=1
+					vertical_edge_dist=central_x_axis-j
+					vertical_edge_dist_sum+=vertical_edge_dist
+					vertical_edge_dist_mean=vertical_edge_dist_sum/vertical_edge_count
+					print vertical_edge_dist_sum,vertical_edge_dist_mean
+				#add edge cases for boundary 
 				horizontal_dist=i- central_y_axis	#negative for left and positive for right of center
 				horizontal_sum+=horizontal_dist	#negative if left heavy
 				vertical_dist=central_x_axis- j	#positive for up and negative for down of center
 				vertical_sum+=vertical_dist		#positive if up heavy
-	horizontal_mean=horizontal_sum/w           #divide by width of the segment
-	vertical_mean=vertical_sum/h               #divide by height of the segment
+				horizontal_square_sum+=((horizontal_dist)*(horizontal_dist))
+				vertical_square_sum+=((vertical_dist)*(vertical_dist))
+				xy_var=horizontal_dist*vertical_dist   #continue
+				xy_var_sum+=xy_var
+				xxy_var=(horizontal_dist*horizontal_dist)*vertical_dist
+				yyx_var=(vertical_dist*vertical_dist)*horizontal_dist
+				xxy_var_sum+=xxy_var
+				yyx_var_sum+=yyx_var
+	horizontal_mean=horizontal_sum/(w*on_pixel)           #divide by width of the segment
+	vertical_mean=vertical_sum/(h*on_pixel)               #divide by height of the segment
+	horizontal_square=horizontal_square_sum/on_pixel
+	vertical_square=vertical_square_sum/on_pixel
+	xy_var_mean=xy_var_sum/on_pixel
+	xxy_var_mean=xxy_var_sum/on_pixel
+	yyx_var_mean=yyx_var_sum/on_pixel
+
 	# Converting all the feature data into a tuple
-	feature_list.append([euler_number,horizontal_mean,vertical_mean])
+	feature_list.append([euler_number,on_pixel,horizontal_mean,vertical_mean,horizontal_square,vertical_square,xy_var_mean,xxy_var_mean,yyx_var_mean])
+	print "horizontal_edge_count",horizontal_edge_count
+	print "vertical_edge_count",vertical_edge_count
 print feature_list
 cv2.waitKey(0)
 cv2.destroyAllWindows()
