@@ -1,6 +1,6 @@
 import cv2
 import numpy
-from extractor import find_eular,find_total_pixels,extract_coordinate_based_features
+from extractor import find_eular,find_total_on_pixels,extract_coordinate_based_features
 SEGMENTS_DIRECTION= 0 # vertical axis in numpy
 
 def segments_to_numpy( segments ):
@@ -44,20 +44,17 @@ draw_segments(copy,segments)
 cv2.imshow('Display',copy)
 print("After Segmentation")
 cv2.waitKey(0)
-#Is removing unnecessary segments from the segment list required?
-count=0 #counting number of segments within a given segment
 #Finding the outer bounding box to find segments within a segment 
 xmin,ymin,wmin,hmin= numpy.amin(segments, axis=0) 
 xmax,ymax,wmax,hmax= numpy.amax(segments, axis=0) 
 print "number of segments:{}".format(len(segments)) #number of segments for reference and confirmation
 print "Feature Data: Euler Number, Horizontal Mean, Vertical Mean"
-count=0
 feature_list =[]
 for each_segment in segments :
 	if (each_segment==[xmin,ymin,wmax,hmax]).all(): # Skipping the large segment
 		continue
 	euler_number=find_eular(each_segment,segments)
-	on_pixel=find_total_pixels(image,each_segment)
+	on_pixel=find_total_on_pixels(image,each_segment)
 	coordinate_features = extract_coordinate_based_features(image,on_pixel,each_segment);
 	# Converting all the feature data into a tuple
 	feature_list.append([euler_number,on_pixel]+coordinate_features)

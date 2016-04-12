@@ -1,5 +1,5 @@
 def find_eular(each_segment,segments):
-	#Finding the Euler Number
+	'''Finding the Euler Number of a segment'''
 	flag=0
 	x1,y1,w1,h1=each_segment
 	x2=x1+w1
@@ -13,7 +13,8 @@ def find_eular(each_segment,segments):
 	euler_number=1-flag
 	return euler_number
 
-def find_total_pixels(image,segment):
+def find_total_on_pixels(image,segment):
+	'''Finding the total number of on_pixels in a segment'''
 	on_pixel=0
 	x,y,w,h=segment
 	for i in range(y, y+h) :
@@ -25,6 +26,7 @@ def find_total_pixels(image,segment):
 	return on_pixel
 
 def extract_coordinate_based_features(image,on_pixel,segment):
+	'''Finding all the features based of the x,y of on_pixels in a segment'''
 	x,y,w,h=segment
 	horizontal_sum=0.0
 	vertical_sum=0.0
