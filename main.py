@@ -1,6 +1,6 @@
 import cv2
 import numpy
-
+from extractor import find_eular,find_total_pixels,extract_coordinate_based_features
 SEGMENTS_DIRECTION= 0 # vertical axis in numpy
 
 def segments_to_numpy( segments ):
@@ -54,79 +54,13 @@ print "Feature Data: Euler Number, Horizontal Mean, Vertical Mean"
 count=0
 feature_list =[]
 for each_segment in segments :
-	#Finding the Euler Number
-	flag=0
-	x1,y1,w1,h1=each_segment
-	if (each_segment==[xmin,ymin,wmax,hmax]).all():
-			continue
-	x2=x1+w1
-	y2=y1+h1
-	for segment in segments :
-		if ((segment==each_segment).all()):
-			continue
-		x,y,w,h=segment
-		if x>x1 and x<x2 and y>y1 and y<y2 and x+w>x1 and x+w<x2 and y+h>y1 and y+h<y2  :
-			flag=flag+1
-			count=count+1
-	euler_number=1-flag
-
-	#horizontal mean list and vertical mean list
-	horizontal_sum=0.0
-	vertical_sum=0.0
-	horizontal_square_sum=0.0
-	vertical_square_sum=0.0
-	xy_var_sum=0.0
-	on_pixel=0.0
-	xxy_var_sum=0.0
-	yyx_var_sum=0.0
-	horizontal_edge_count=0.0
-	vertical_edge_count=0.0
-	horizontal_edge_dist_sum=0.0
-	vertical_edge_dist_sum=0.0
-	x,y,w,h=each_segment
-	#center of the segment
-	segment_centres=x+w/2,y+h/2
-	central_y_axis=x+w/2 # the line is where x = 0
-	central_x_axis=y+h/2 # the line is where y = 0
-	for i in range(y, y+h) :
-		for j in  range(x, x+w) :
-			pixel_intensity= image[i,j]	#white(255) or black(0)
-			#if the pixel is black, find distance from the axis center
-			if pixel_intensity==0 :
-				on_pixel+=1
-				if image[i-1][j]==255 :
-					horizontal_edge_count+=1
-					horizontal_edge_dist=j-central_y_axis
-					horizontal_edge_dist_sum+=horizontal_edge_dist
-					horizontal_edge_dist_mean=horizontal_square_sum/horizontal_edge_count
-				if image[i][j-1]==255 :
-					vertical_edge_count+=1
-					vertical_edge_dist=central_x_axis-i
-					vertical_edge_dist_sum+=vertical_edge_dist
-					vertical_edge_dist_mean=vertical_edge_dist_sum/vertical_edge_count
-				#FIX ME: add edge cases for boundary
-				horizontal_dist=j- central_y_axis	#negative for left and positive for right of center
-				horizontal_sum+=horizontal_dist	#negative if left heavy
-				vertical_dist=central_x_axis- i	#positive for up and negative for down of center
-				vertical_sum+=vertical_dist		#positive if up heavy
-				horizontal_square_sum+=((horizontal_dist)*(horizontal_dist))
-				vertical_square_sum+=((vertical_dist)*(vertical_dist))
-				xy_var=horizontal_dist*vertical_dist   #continue
-				xy_var_sum+=xy_var
-				xxy_var=(horizontal_dist*horizontal_dist)*vertical_dist
-				yyx_var=(vertical_dist*vertical_dist)*horizontal_dist
-				xxy_var_sum+=xxy_var
-				yyx_var_sum+=yyx_var
-	horizontal_mean=horizontal_sum/(w*on_pixel)           #divide by width of the segment
-	vertical_mean=vertical_sum/(h*on_pixel)               #divide by height of the segment
-	horizontal_square=horizontal_square_sum/on_pixel
-	vertical_square=vertical_square_sum/on_pixel
-	xy_var_mean=xy_var_sum/on_pixel
-	xxy_var_mean=xxy_var_sum/on_pixel
-	yyx_var_mean=yyx_var_sum/on_pixel
-
+	if (each_segment==[xmin,ymin,wmax,hmax]).all(): # Skipping the large segment
+		continue
+	euler_number=find_eular(each_segment,segments)
+	on_pixel=find_total_pixels(image,each_segment)
+	coordinate_features = extract_coordinate_based_features(image,on_pixel,each_segment);
 	# Converting all the feature data into a tuple
-	feature_list.append([euler_number,on_pixel,x,y,w,h,horizontal_mean,vertical_mean,horizontal_square,vertical_square,xy_var_mean,xxy_var_mean,yyx_var_mean,horizontal_edge_dist_sum, horizontal_edge_dist_mean,vertical_edge_dist_sum,vertical_edge_dist_mean])
+	feature_list.append([euler_number,on_pixel]+coordinate_features)
 print feature_list
 cv2.waitKey(0)
 cv2.destroyAllWindows()
