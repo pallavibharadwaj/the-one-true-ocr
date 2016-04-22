@@ -71,12 +71,16 @@ for each_segment in segments:
     #inner_segments= inner_segment()
     #print inner_segments
     #print type(inner_segments)
+    bad_flag=0
     x,y,w,h=each_segment
     for inner in inner_segments:
         x1,y1,w1,h1=inner
         if ([x,y,w,h]==[x1,y1,w1,h1]):
             flag=flag+1
+            bad_flag=1
             continue
+    if(bad_flag==1):
+        continue
     if (each_segment == [xmin, ymin, wmax, hmax]).all():
         # Skipping the large segment
         continue
