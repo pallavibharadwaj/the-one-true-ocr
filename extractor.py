@@ -8,10 +8,12 @@ inner_segments=[]
 def find_eular(each_segment, segments):
     '''Finding the Euler Number of a segment'''
     flag = 0
+    counter=0
     x1, y1, w1, h1 = each_segment
     x2 = x1+w1
     y2 = y1+h1
     for segment in segments:
+
         if ((segment == each_segment).all()):
             continue
         x, y, w, h = segment
@@ -28,6 +30,7 @@ def find_eular(each_segment, segments):
             flag = flag+1
             if flag != 0:
                 inner_segments.append(segment)
+        counter=counter+1
     euler_number = 1-flag
     #print (inner_segments)
     return euler_number

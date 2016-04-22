@@ -80,6 +80,7 @@ for each_segment in segments:
     if (each_segment == [xmin, ymin, wmax, hmax]).all():
         # Skipping the large segment
         continue
+    euler_number = find_eular(each_segment, segments)
     on_pixel = find_total_on_pixels(image, each_segment)
     coordinate_features = extract_coordinate_based_features(
         image,
