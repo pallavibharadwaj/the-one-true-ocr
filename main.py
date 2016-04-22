@@ -4,6 +4,8 @@ from extractor import find_eular, find_total_on_pixels, get_char
 from extractor import extract_coordinate_based_features, inner_segment
 from segmentation import segments_to_numpy, draw_segments
 
+f=open("data.txt",'w')
+
 image = cv2.imread('alpha.png')
 cv2.imshow('Display', image)
 copy = image.copy()  # Keeping a non-greyscale copy of the image for later use
@@ -94,9 +96,11 @@ for each_segment in segments:
     segment_features = [euler_number, on_pixel]+coordinate_features
     char_data = get_char(copy_for_grounding, each_segment, segment_features)
     final_data = [char_data] + segment_features
+    f.write(' '.join(map(str, final_data))+"\n")
     print(final_data)
 print flag
     # draw_individual_segment(copy_for_grounding, each_segment)
 # print feature_list
+f.close()
 cv2.waitKey(0)
 cv2.destroyAllWindows()
