@@ -60,9 +60,6 @@ for each_segment in segments:
     euler_number = find_eular(each_segment, segments)
 #add code to remove inner segments
 inner_segments= inner_segment()
-print type(segments)
-print len(inner_segments)
-print inner_segments
 
 flag=0
 for each_segment in segments:
@@ -74,12 +71,15 @@ for each_segment in segments:
     #inner_segments= inner_segment()
     #print inner_segments
     #print type(inner_segments)
+    x,y,w,h=each_segment
+    for inner in inner_segments:
+        x1,y1,w1,h1=inner
+        if ([x,y,w,h]==[x1,y1,w1,h1]):
+            flag=flag+1
+            continue
     if (each_segment == [xmin, ymin, wmax, hmax]).all():
         # Skipping the large segment
         continue
-    if each_segment in inner_segments :
-        print each_segment
-        flag=flag+1
     on_pixel = find_total_on_pixels(image, each_segment)
     coordinate_features = extract_coordinate_based_features(
         image,
