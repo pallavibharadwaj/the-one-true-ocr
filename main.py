@@ -1,7 +1,7 @@
 import cv2
 import numpy
 from extractor import find_eular, find_total_on_pixels, get_char
-from extractor import extract_coordinate_based_features
+from extractor import extract_coordinate_based_features, inner_segment
 from segmentation import segments_to_numpy, draw_segments
 
 image = cv2.imread('alpha.png')
@@ -52,11 +52,34 @@ cv2.waitKey(0)
 xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
 xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
 feature_list = []
+
 for each_segment in segments:
     if (each_segment == [xmin, ymin, wmax, hmax]).all():
         # Skipping the large segment
         continue
     euler_number = find_eular(each_segment, segments)
+#add code to remove inner segments
+inner_segments= inner_segment()
+print type(segments)
+print len(inner_segments)
+print inner_segments
+
+flag=0
+for each_segment in segments:
+    #if (each_segment == [xmin, ymin, wmax, hmax]).all():
+    #    # Skipping the large segment
+    #    continue
+    #euler_number = find_eular(each_segment, segments)
+    #add code to remove inner segments
+    #inner_segments= inner_segment()
+    #print inner_segments
+    #print type(inner_segments)
+    if (each_segment == [xmin, ymin, wmax, hmax]).all():
+        # Skipping the large segment
+        continue
+    if each_segment in inner_segments :
+        print each_segment
+        flag=flag+1
     on_pixel = find_total_on_pixels(image, each_segment)
     coordinate_features = extract_coordinate_based_features(
         image,
@@ -68,6 +91,7 @@ for each_segment in segments:
     final_data = [char_data] + segment_features
     print(final_data)
     feature_list.append(final_data)
+print flag
     # draw_individual_segment(copy_for_grounding, each_segment)
 # print feature_list
 cv2.waitKey(0)

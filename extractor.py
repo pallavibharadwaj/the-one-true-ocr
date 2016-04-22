@@ -1,5 +1,10 @@
 import cv2
 from segmentation import draw_individual_segment
+import numpy
+from segmentation import segments_to_numpy
+
+inner_segments=[]
+
 def find_eular(each_segment, segments):
     '''Finding the Euler Number of a segment'''
     flag = 0
@@ -21,9 +26,15 @@ def find_eular(each_segment, segments):
             y+h < y2
         ):
             flag = flag+1
+            if flag != 0:
+                inner_segments.append(segment)
     euler_number = 1-flag
+    #print (inner_segments)
     return euler_number
 
+def inner_segment():
+    segments=segments_to_numpy(inner_segments)
+    return  segments
 
 def find_total_on_pixels(image, segment):
     '''Finding the total number of on_pixels in a segment'''
