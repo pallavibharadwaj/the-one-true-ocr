@@ -1,3 +1,5 @@
+import cv2
+from segmentation import draw_individual_segment
 def find_eular(each_segment, segments):
     '''Finding the Euler Number of a segment'''
     flag = 0
@@ -76,6 +78,16 @@ def extract_coordinate_based_features(image, on_pixel, segment):
         horizontal_mean, x, y, w, h, vertical_mean, horizontal_variance,
         vertical_variance, xy_correlation_mean, xxy_mean, yyx_mean
     ])
+
+
+def get_char(image, segment, segment_feature):
+    '''getting the character from user for the segment'''
+    key_list = []
+    draw_individual_segment(image, segment)
+    key = cv2.waitKey(0)
+    key %= 256
+    key_list.append(key)
+    return unichr(key)
 
 
 '''def horizontal_edge_features(segment):

@@ -1,43 +1,8 @@
 import cv2
 import numpy
-from extractor import find_eular, find_total_on_pixels
+from extractor import find_eular, find_total_on_pixels, get_char
 from extractor import extract_coordinate_based_features
-SEGMENTS_DIRECTION = 0  # vertical axis in numpy
-
-
-def segments_to_numpy(segments):
-    '''given a list of 4-element tuples, transforms it into a numpy array'''
-    segments = numpy.array(segments, dtype=numpy.uint16, ndmin=2)
-    # each segment in a row
-    if SEGMENTS_DIRECTION != 0:
-        numpy.transpose(segments)
-    return segments
-
-
-def draw_segments(image, segments, color=(255, 0, 0), line_width=1):
-    '''draws segments on image'''
-    for segment in segments:
-        x, y, w, h = segment
-        cv2.rectangle(image, (x, y), (x+w, y+h), color, line_width)
-
-
-def draw_individual_segment(image, segment, color=(0, 0, 255), line_width=1):
-    '''draws a rectangle around the current segment'''
-    x, y, w, h = segment
-    copy_image = image.copy()
-    cv2.rectangle(copy_image, (x, y), (x+w, y+h), color, line_width)
-    cv2.imshow('Display', copy_image)
-
-
-def get_char(image, segment, segment_feature):
-    '''getting the character from user for the segment'''
-    key_list = []
-    draw_individual_segment(image, segment)
-    key = cv2.waitKey(0)
-    key %= 256
-    key_list.append(key)
-    return unichr(key)
-
+from segmentation import segments_to_numpy, draw_segments
 
 image = cv2.imread('alpha.png')
 cv2.imshow('Display', image)
