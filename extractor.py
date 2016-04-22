@@ -100,8 +100,7 @@ def get_char(image, segment, segment_feature):
     draw_individual_segment(image, segment)
     key = cv2.waitKey(0)
     key %= 256
-    key_list.append(key)
-    return unichr(key)
+    return chr(key)
 
 
 '''def horizontal_edge_features(segment):

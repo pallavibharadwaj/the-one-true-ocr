@@ -95,7 +95,6 @@ for each_segment in segments:
     char_data = get_char(copy_for_grounding, each_segment, segment_features)
     final_data = [char_data] + segment_features
     print(final_data)
-    feature_list.append(final_data)
 print flag
     # draw_individual_segment(copy_for_grounding, each_segment)
 # print feature_list
