@@ -6,8 +6,8 @@ from segmentation import segments_to_numpy, draw_segments
 
 f=open("data.txt",'w')
 
-image = cv2.imread('train1.png')
-image2 = cv2.imread('test1.png')
+image = cv2.imread('alpha.png')
+image2 = cv2.imread('alpha2.png')
 cv2.imshow('Display', image)
 copy = image.copy()  # Keeping a non-greyscale copy of the image for later use
 cv2.waitKey(0)
@@ -111,34 +111,40 @@ for each_segment in segments:
     # f.write(' '.join(map(str, final_data))+"\n")
 
 
+xmin1, ymin1, wmin1, hmin1 = numpy.amin(segments2, axis=0)
+xmax1, ymax1, wmax1, hmax1 = numpy.amax(segments2, axis=0)
+
 
 for each_segment in segments2:
-    if (each_segment == [xmin, ymin, wmax, hmax]).all():
+    if (each_segment == [xmin1, ymin1, wmax1, hmax1]).all():
         # Skipping the large segment
         continue
     euler_number = find_eular(each_segment, segments2)
 #add code to remove inner segments
-inner_segments= inner_segment()
+inner_segments2= inner_segment()
 
 flag=0
 
 for each_segment in segments2:
     bad_flag=0
     x,y,w,h=each_segment
-    for inner in inner_segments:
+    if (each_segment == [xmin1, ymin1, wmax1, hmax1]).all():
+        print "large segment"
+        # Skipping the large segment
+        continue
+    for inner in inner_segments2:
         x1,y1,w1,h1=inner
         if ([x,y,w,h]==[x1,y1,w1,h1]):
             flag=flag+1
             bad_flag=1
             continue
     if(bad_flag==1):
+        print "bad_flag"
         continue
-    if (each_segment == [xmin, ymin, wmax, hmax]).all():
-        # Skipping the large segment
-        continue
+    print "in the loop ,ike a BOSS"
     euler_number = find_eular(each_segment, segments2)
     on_pixel = find_total_on_pixels(image2, each_segment)
-    cv2.waitKey(0)
+    #cv2.waitKey(0)
     coordinate_features = extract_coordinate_based_features(
         image2,
         on_pixel,
@@ -148,26 +154,19 @@ for each_segment in segments2:
     #char_data = get_char(copy_for_grounding, each_segment, segment_features)
     final_data = segment_features
     feature_list2.append(final_data)
-    classes_list2.append(ord(char_data))
+    #classes_list2.append(ord(char_data))
 
+#print "flist1",feature_list
+print "flist2",feature_list2
 
-
-
-
-
-
-
-
-
-
-
-
+print "classes",classes_list
+#print "Classes2",classes_list2
 
 features= numpy.asarray( feature_list, dtype=numpy.float32 )
 classes= numpy.asarray( classes_list, dtype=numpy.float32 )
 features2 =  numpy.asarray( feature_list2, dtype=numpy.float32 )
-print('haha',features)
-print('help',features2)
+#print('haha',features)
+#print('help',features2)
 knn.train(features,cv2.ml.ROW_SAMPLE, classes)
 retval, result_classes, neigh_resp, dists= knn.findNearest(features2, k= 1)
 temp_classes = result_classes.tolist()
