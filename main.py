@@ -1,10 +1,10 @@
 import cv2
 import numpy
 from extractor import find_eular_and_inner_segments, find_total_on_pixels, get_char
-from extractor import extract_coordinate_based_features
+from extractor import extract_coordinate_based_features, get_feature_list, get_class_list
 from segmentation import segments_to_numpy, draw_segments
 
-f=open("data.txt",'w')
+#f=open("data.txt",'w')
 
 image = cv2.imread('alpha.png')
 image2 = cv2.imread('alpha2.png')
@@ -66,95 +66,27 @@ cv2.imshow('Display', copy)
 print("After Segmentation")
 cv2.waitKey(0)
 # Finding the outer bounding box to find segments within a segment
-xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
-xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
-feature_list = []
-classes_list = []
 feature_list2 = []
 classes_list2 = []
 knn = cv2.ml.KNearest_create()
-inner_segments = []
 # To get the training data from image
-eular_list, inner_segments= find_eular_and_inner_segments(segments)
-#add code to remove inner segments
-flag=0
-segment_count = 0
-for each_segment in segments:
-    bad_flag=0
-    x,y,w,h=each_segment
-    for inner in inner_segments:
-        x1,y1,w1,h1=inner
-        if ([x,y,w,h]==[x1,y1,w1,h1]):
-            flag=flag+1
-            bad_flag=1
-            continue
-    if(bad_flag==1):
-        continue
-    if (each_segment == [xmin, ymin, wmax, hmax]).all():
-        # Skipping the large segment
-        continue
-    eular_number = eular_list[segment_count]
-    segment_count+=1
-    on_pixel = find_total_on_pixels(image, each_segment)
-    coordinate_features = extract_coordinate_based_features(
-        image,
-        on_pixel,
-        each_segment)
-    # Converting all the feature data into a tuple
-    segment_features = [eular_number,on_pixel]+coordinate_features
-    char_data = get_char(copy_for_grounding, each_segment, segment_features)
-    final_data = segment_features
-    feature_list.append(final_data)
-    classes_list.append(ord(char_data))
     # f.write(' '.join(map(str, final_data))+"\n")
 
-
-# To get data from test image
-
-xmin1, ymin1, wmin1, hmin1 = numpy.amin(segments2, axis=0)
-xmax1, ymax1, wmax1, hmax1 = numpy.amax(segments2, axis=0)
-
-
-euler_number, inner_segments2 = find_eular_and_inner_segments(segments2)
-#add code to remove inner segments
-
-
-flag=0
-segment_count2 = 0
-for each_segment in segments2:
-    bad_flag=0
-    x,y,w,h=each_segment
-    if (each_segment == [xmin1, ymin1, wmax1, hmax1]).all():
-        continue
-    for inner in inner_segments2:
-        x1,y1,w1,h1=inner
-        if ([x,y,w,h]==[x1,y1,w1,h1]):
-            flag=flag+1
-            bad_flag=1
-            continue
-    if(bad_flag==1):
-        continue
-    euler_number = eular_list[segment_count2]
-    segment_count2+=1
-    on_pixel = find_total_on_pixels(image2, each_segment)
-    coordinate_features = extract_coordinate_based_features(
-        image2,
-        on_pixel,
-        each_segment)
-    # Converting all the feature data into a tuple
-    segment_features = [euler_number, on_pixel]+coordinate_features
-    final_data = segment_features
-    feature_list2.append(final_data)
+feature_list= get_feature_list(image, segments)
+classes_list= get_class_list(copy_for_grounding, segments)
+feature_list2 = get_feature_list(image2,segments2)
 
 features= numpy.asarray( feature_list, dtype=numpy.float32 )
 classes= numpy.asarray( classes_list, dtype=numpy.float32 )
 features2 =  numpy.asarray( feature_list2, dtype=numpy.float32 )
+
 knn.train(features,cv2.ml.ROW_SAMPLE, classes)
 retval, result_classes, neigh_resp, dists= knn.findNearest(features2, k= 1)
 temp_classes = result_classes.tolist()
+
 flattened = [chr(int(val)) for sublist in temp_classes for val in sublist]
 print flattened
 
-f.close()
+#f.close()
 cv2.waitKey(0)
 cv2.destroyAllWindows()

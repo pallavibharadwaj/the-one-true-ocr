@@ -96,7 +96,7 @@ def extract_coordinate_based_features(image, on_pixel, segment):
     ])
 
 
-def get_char(image, segment, segment_feature):
+def get_char(image, segment):
     '''getting the character from user for the segment'''
     key_list = []
     draw_individual_segment(image, segment)
@@ -105,7 +105,67 @@ def get_char(image, segment, segment_feature):
     return chr(key)
 
 
-'''def horizontal_edge_features(segment):
+def get_feature_list(image ,segments):
+    xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
+    xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
+    feature_list = []
+    classes_list = []
+    eular_list, inner_segments= find_eular_and_inner_segments(segments)
+    #add code to remove inner segments
+    segment_count = 0
+    for each_segment in segments:
+        bad_flag=0
+        x,y,w,h=each_segment
+        for inner in inner_segments:
+            x1,y1,w1,h1=inner
+            if ([x,y,w,h]==[x1,y1,w1,h1]):
+                bad_flag=1
+                continue
+        if(bad_flag==1):
+            continue
+        if (each_segment == [xmin, ymin, wmax, hmax]).all():
+            # Skipping the large segment
+            continue
+        eular_number = eular_list[segment_count]
+        segment_count+=1
+        on_pixel = find_total_on_pixels(image, each_segment)
+        coordinate_features = extract_coordinate_based_features(
+            image,
+            on_pixel,
+            each_segment)
+        # Converting all the feature data into a tuple
+        segment_features = [eular_number,on_pixel]+coordinate_features
+        final_data = segment_features
+        feature_list.append(final_data)
+    return feature_list
+
+
+def get_class_list(image,segments):
+    xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
+    xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
+    classes_list = []
+    eular_list, inner_segments= find_eular_and_inner_segments(segments)
+    #add code to remove inner segments
+    segment_count = 0
+    for each_segment in segments:
+        bad_flag=0
+        x,y,w,h=each_segment
+        for inner in inner_segments:
+            x1,y1,w1,h1=inner
+            if ([x,y,w,h]==[x1,y1,w1,h1]):
+                bad_flag=1
+                continue
+        if(bad_flag==1):
+            continue
+        if (each_segment == [xmin, ymin, wmax, hmax]).all():
+            # Skipping the large segment
+            continue
+        char_data = get_char(image, each_segment)
+        classes_list.append(ord(char_data))
+    return classes_list
+
+'''
+def horizontal_edge_features(segment):
     on_pixel=0
     x,y,w,h=segment
     for i in range(y, y+h) :
