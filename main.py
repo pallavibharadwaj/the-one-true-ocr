@@ -1,7 +1,7 @@
 import cv2
 import numpy
-from extractor import find_eular, find_total_on_pixels, get_char
-from extractor import extract_coordinate_based_features, inner_segment
+from extractor import find_eular_and_inner_segments, find_total_on_pixels, get_char
+from extractor import extract_coordinate_based_features
 from segmentation import segments_to_numpy, draw_segments
 
 f=open("data.txt",'w')
@@ -73,17 +73,12 @@ classes_list = []
 feature_list2 = []
 classes_list2 = []
 knn = cv2.ml.KNearest_create()
-
+inner_segments = []
 # To get the training data from image
-for each_segment in segments:
-    if (each_segment == [xmin, ymin, wmax, hmax]).all():
-        # Skipping the large segment
-        continue
-    euler_number = find_eular(each_segment, segments)
+eular_list, inner_segments= find_eular_and_inner_segments(segments)
 #add code to remove inner segments
-inner_segments= inner_segment()
-
 flag=0
+segment_count = 0
 for each_segment in segments:
     bad_flag=0
     x,y,w,h=each_segment
@@ -98,14 +93,15 @@ for each_segment in segments:
     if (each_segment == [xmin, ymin, wmax, hmax]).all():
         # Skipping the large segment
         continue
-    euler_number = find_eular(each_segment, segments)
+    eular_number = eular_list[segment_count]
+    segment_count+=1
     on_pixel = find_total_on_pixels(image, each_segment)
     coordinate_features = extract_coordinate_based_features(
         image,
         on_pixel,
         each_segment)
     # Converting all the feature data into a tuple
-    segment_features = [euler_number, on_pixel]+coordinate_features
+    segment_features = [eular_number,on_pixel]+coordinate_features
     char_data = get_char(copy_for_grounding, each_segment, segment_features)
     final_data = segment_features
     feature_list.append(final_data)
@@ -119,16 +115,12 @@ xmin1, ymin1, wmin1, hmin1 = numpy.amin(segments2, axis=0)
 xmax1, ymax1, wmax1, hmax1 = numpy.amax(segments2, axis=0)
 
 
-for each_segment in segments2:
-    if (each_segment == [xmin1, ymin1, wmax1, hmax1]).all():
-        # Skipping the large segment
-        continue
-    euler_number = find_eular(each_segment, segments2)
+euler_number, inner_segments2 = find_eular_and_inner_segments(segments2)
 #add code to remove inner segments
-inner_segments2= inner_segment()
+
 
 flag=0
-
+segment_count2 = 0
 for each_segment in segments2:
     bad_flag=0
     x,y,w,h=each_segment
@@ -142,7 +134,8 @@ for each_segment in segments2:
             continue
     if(bad_flag==1):
         continue
-    euler_number = find_eular(each_segment, segments2)
+    euler_number = eular_list[segment_count2]
+    segment_count2+=1
     on_pixel = find_total_on_pixels(image2, each_segment)
     coordinate_features = extract_coordinate_based_features(
         image2,
@@ -152,7 +145,6 @@ for each_segment in segments2:
     segment_features = [euler_number, on_pixel]+coordinate_features
     final_data = segment_features
     feature_list2.append(final_data)
-
 
 features= numpy.asarray( feature_list, dtype=numpy.float32 )
 classes= numpy.asarray( classes_list, dtype=numpy.float32 )

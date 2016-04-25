@@ -3,41 +3,43 @@ from segmentation import draw_individual_segment
 import numpy
 from segmentation import segments_to_numpy
 
-inner_segments=[]
 
-def find_eular(each_segment, segments):
-    '''Finding the Euler Number of a segment'''
-    flag = 0
-    counter=0
-    x1, y1, w1, h1 = each_segment
-    x2 = x1+w1
-    y2 = y1+h1
-    for segment in segments:
-
-        if ((segment == each_segment).all()):
+def find_eular_and_inner_segments(segments):
+    '''Finding the Euler Numbers and inner_segments for the given image or set of segments'''
+    xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
+    xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
+    eular_list = []
+    inner_segments = []
+    for each_segment in segments:
+        if (each_segment == [xmin, ymin, wmax, hmax]).all():
             continue
-        x, y, w, h = segment
-        if (
-            x > x1 and
-            x < x2 and
-            y > y1 and
-            y < y2 and
-            x+w > x1 and
-            x+w < x2 and
-            y+h > y1 and
-            y+h < y2
-        ):
-            flag = flag+1
-            if flag != 0:
-                inner_segments.append(segment)
-        counter=counter+1
-    euler_number = 1-flag
-    #print (inner_segments)
-    return euler_number
+        flag = 0
+        counter=0
+        x1, y1, w1, h1 = each_segment
+        x2 = x1+w1
+        y2 = y1+h1
+        for segment in segments:
 
-def inner_segment():
-    segments=segments_to_numpy(inner_segments)
-    return  segments
+            if ((segment == each_segment).all()):
+                continue
+            x, y, w, h = segment
+            if (
+                x > x1 and
+                x < x2 and
+                y > y1 and
+                y < y2 and
+                x+w > x1 and
+                x+w < x2 and
+                y+h > y1 and
+                y+h < y2
+            ):
+                flag = flag+1
+                if flag != 0:
+                    inner_segments.append(segment)
+            counter=counter+1
+        eular_number = 1-flag
+        eular_list.append(eular_number)
+    return eular_list, inner_segments
 
 def find_total_on_pixels(image, segment):
     '''Finding the total number of on_pixels in a segment'''
