@@ -73,6 +73,8 @@ classes_list = []
 feature_list2 = []
 classes_list2 = []
 knn = cv2.ml.KNearest_create()
+
+# To get the training data from image
 for each_segment in segments:
     if (each_segment == [xmin, ymin, wmax, hmax]).all():
         # Skipping the large segment
@@ -111,6 +113,8 @@ for each_segment in segments:
     # f.write(' '.join(map(str, final_data))+"\n")
 
 
+# To get data from test image
+
 xmin1, ymin1, wmin1, hmin1 = numpy.amin(segments2, axis=0)
 xmax1, ymax1, wmax1, hmax1 = numpy.amax(segments2, axis=0)
 
@@ -129,8 +133,6 @@ for each_segment in segments2:
     bad_flag=0
     x,y,w,h=each_segment
     if (each_segment == [xmin1, ymin1, wmax1, hmax1]).all():
-        print "large segment"
-        # Skipping the large segment
         continue
     for inner in inner_segments2:
         x1,y1,w1,h1=inner
@@ -139,42 +141,28 @@ for each_segment in segments2:
             bad_flag=1
             continue
     if(bad_flag==1):
-        print "bad_flag"
         continue
-    print "in the loop ,ike a BOSS"
     euler_number = find_eular(each_segment, segments2)
     on_pixel = find_total_on_pixels(image2, each_segment)
-    #cv2.waitKey(0)
     coordinate_features = extract_coordinate_based_features(
         image2,
         on_pixel,
         each_segment)
     # Converting all the feature data into a tuple
     segment_features = [euler_number, on_pixel]+coordinate_features
-    #char_data = get_char(copy_for_grounding, each_segment, segment_features)
     final_data = segment_features
     feature_list2.append(final_data)
-    #classes_list2.append(ord(char_data))
 
-#print "flist1",feature_list
-print "flist2",feature_list2
-
-print "classes",classes_list
-#print "Classes2",classes_list2
 
 features= numpy.asarray( feature_list, dtype=numpy.float32 )
 classes= numpy.asarray( classes_list, dtype=numpy.float32 )
 features2 =  numpy.asarray( feature_list2, dtype=numpy.float32 )
-#print('haha',features)
-#print('help',features2)
 knn.train(features,cv2.ml.ROW_SAMPLE, classes)
 retval, result_classes, neigh_resp, dists= knn.findNearest(features2, k= 1)
 temp_classes = result_classes.tolist()
 flattened = [chr(int(val)) for sublist in temp_classes for val in sublist]
 print flattened
 
-    # draw_individual_segment(copy_for_grounding, each_segment)
-# print feature_list
 f.close()
 cv2.waitKey(0)
 cv2.destroyAllWindows()

@@ -5,7 +5,7 @@ SEGMENTS_DIRECTION = 0  # vertical axis in numpy
 
 def segments_to_numpy(segments):
     '''given a list of 4-element tuples, transforms it into a numpy array'''
-    segments = numpy.array(segments, dtype=numpy.uint16, ndmin=2)
+    segments = numpy.asarray(segments, dtype=numpy.uint16)
     # each segment in a row
     if SEGMENTS_DIRECTION != 0:
         numpy.transpose(segments)
