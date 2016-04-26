@@ -61,8 +61,6 @@ def preprocess(image):
     image.fill(255)
     cv2.drawContours(image, contours, -1, (0, 0, 255))
     ''' Drawing the contours on the image before displaying'''
-    cv2.imshow('Display2', image)
-    cv2.waitKey(0)
     contours.reverse()
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
     return image, segments
