@@ -1,11 +1,15 @@
 import cv2
 import numpy
+import os
 from extractor import get_feature_list, get_class_list
 from preprocessor import preprocess, preprocess_with_display
 from files import load_data_from_file, generate_ground_data
 
 image = cv2.imread('data/alpha.png')
 image2 = cv2.imread('data/alpha2.png')
+img,extension=os.path.splitext("data/alpha.png") #splits the image path and the extension
+#print img
+print os.path.basename(img) #extracts the filename from an extension
 copy=image.copy()
 image, segments = preprocess_with_display(image)
 image2, segments2 = preprocess(image2)
