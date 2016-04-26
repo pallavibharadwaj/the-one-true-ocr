@@ -7,8 +7,7 @@ def generate_ground_data(in_file,image,copy, segments):
     classes_list= get_class_list(copy, segments)
     with open("%s" % in_file,'wb') as test :
         for char,feature in zip(classes_list,feature_list) :
-            if(char==32):
-                char=46
+            print char  
             test.write("%s %s\n" %(chr(char), ' '.join(map(str,feature))))
 
 def load_data_from_file(in_file):
