@@ -9,14 +9,17 @@ image = cv2.imread('data/alpha.png')
 image2 = cv2.imread('data/alpha2.png')
 img,extension=os.path.splitext("data/alpha.png") #splits the image path and the extension
 #print img
-print os.path.basename(img) #extracts the filename from an extension
+in_file = os.path.basename(img) #extracts the filename from an extension
+#print in_file
+file = open('%s.box' % in_file,'a')
 copy=image.copy()
 image, segments = preprocess_with_display(image)
 image2, segments2 = preprocess(image2)
 knn = cv2.ml.KNearest_create()
 feature_list2 = get_feature_list(image, segments2)
-generate_ground_data(image,copy,segments)
-classes, features = load_data_from_file()
+in_file=in_file + ".txt"
+generate_ground_data(in_file,image,copy,segments)
+classes,features = load_data_from_file(in_file)
 features2 =  numpy.asarray( feature_list2, dtype=numpy.float32 )
 knn.train(features,cv2.ml.ROW_SAMPLE, classes)
 retval, result_classes, neigh_resp, dists= knn.findNearest(features2, k= 1)

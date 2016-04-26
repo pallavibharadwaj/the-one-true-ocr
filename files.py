@@ -1,10 +1,9 @@
 import numpy
 import glob
 from extractor import get_feature_list, get_class_list
-for txt_file in glob.iglob('data/*.txt') :
-    fp = txt_file
-#print fp
-def generate_ground_data(image,copy, segments):
+
+def generate_ground_data(in_file,image,copy, segments):
+    print in_file
     feature_list= get_feature_list(image, segments)
     classes_list= get_class_list(copy, segments)
     with open("%s" % fp,'wb') as test :
@@ -13,8 +12,9 @@ def generate_ground_data(image,copy, segments):
                 char=46
             test.write("%s %s\n" %(chr(char), ' '.join(map(str,feature))))
 
-def load_data_from_file():
-    with open("%s" % fp) as char_file:
+def load_data_from_file(in_file):
+    print in_file
+    with open("%s" % in_file) as char_file:
     	ncols = len(char_file.readline().split(' '))
     classes = numpy.loadtxt("data/alpha.txt", dtype = str, usecols = [0])
     features = numpy.loadtxt("%s" % fp, dtype = float, usecols = range(1,ncols))
