@@ -1,5 +1,4 @@
 import numpy
-import glob
 from extractor import get_feature_list, get_class_list
 
 def generate_ground_data(in_file,image,copy, segments):
