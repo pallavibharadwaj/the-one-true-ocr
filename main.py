@@ -17,7 +17,8 @@ image, segments = preprocess_with_display(image)
 image2, segments2 = preprocess(image2)
 knn = cv2.ml.KNearest_create()
 feature_list2 = get_feature_list(image, segments2)
-in_file=in_file + ".txt"
+in_file = img + ".txt"    #Ex:data/alpha.txt
+#print in_file
 generate_ground_data(in_file,image,copy,segments)
 classes,features = load_data_from_file(in_file)
 features2 =  numpy.asarray( feature_list2, dtype=numpy.float32 )
