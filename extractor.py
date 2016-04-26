@@ -101,7 +101,15 @@ def get_char(image, segment):
     key_list = []
     draw_individual_segment(image, segment)
     key = cv2.waitKey(0)
-    key %= 256
+    key%=256
+    while key<=32 or key>=127 : #invalid characters are pressed
+        if key==255 : #shift key
+            key=cv2.waitKey(0) #wait for another character(special symbols)
+            key%=256
+        else :
+            key = cv2.waitKey(0) 
+            key%=256
+    print key
     return chr(key)
 
 
