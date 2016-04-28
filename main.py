@@ -6,15 +6,12 @@ from preprocessor import preprocess, preprocess_with_display
 from files import load_data_from_file, generate_ground_data
 
 def read_image(image) :
-	image = cv2.imread("%s" % image)
-	return image
-
-def files_creation(train_file) :
-	img_path,extension=os.path.splitext("%s" % train_file) #splits the image path and the extension
+	img_path,extension=os.path.splitext("%s" % image) #splits the image path and the extension
 	img_name= os.path.basename(img_path) #extracts the filename from an extension
 	fp = open('%s.box' % img_path,'wb')	#create a .box file for the image
 	txt_file = img_path + ".txt"    # .txt file that will be used to hold features of the image
-	return txt_file
+	image = cv2.imread("%s" % image)
+	return image, txt_file
 
 def train(train_images) :
 	train_image_names = []
@@ -27,8 +24,8 @@ def train(train_images) :
 
 	for image in train_images :
 		print "\nCurrent image: ",image, "\n"
-		txt_file = files_creation(image)
-		image = read_image(image)	#reading training images
+		image , txt_file = read_image(image)	#reading training images
+		print txt_file
 		copy=image.copy()
 		image, segments = preprocess_with_display(image)
 		#generate_ground_data(txt_file,image,copy,segments)
@@ -49,7 +46,7 @@ def train(train_images) :
 	return class_list, feature_list, test_feature_list
 
 in_image = "data/alpha2.png"
-input_image = read_image(in_image)	#input image to OCR
+input_image,test_txt_file = read_image(in_image)	#input image to OCR
 input_image, segments2 = preprocess(input_image) #preprocess of test image
 
 train_images = "data/alpha.png","data/alpha2.png"
