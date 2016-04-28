@@ -137,6 +137,8 @@ def get_feature_list(image ,segments):
         eular_number = eular_list[segment_count]
         segment_count+=1
         on_pixel = find_total_on_pixels(image, each_segment)
+        if on_pixel == 0 :
+            continue     #empty segment
         coordinate_features = extract_coordinate_based_features(
             image,
             on_pixel,
