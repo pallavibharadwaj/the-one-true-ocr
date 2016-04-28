@@ -8,7 +8,6 @@ from files import load_data_from_file, generate_ground_data
 def read_image(image) :
 	img_path,extension=os.path.splitext("%s" % image) #splits the image path and the extension
 	img_name= os.path.basename(img_path) #extracts the filename from an extension
-	fp = open('%s.box' % img_path,'wb')	#create a .box file for the image
 	txt_file = img_path + ".txt"    # .txt file that will be used to hold features of the image
 	image = cv2.imread("%s" % image)
 	return image, txt_file
