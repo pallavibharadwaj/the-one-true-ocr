@@ -107,7 +107,7 @@ def get_char(image, segment):
             key=cv2.waitKey(0) #wait for another character(special symbols)
             key%=256
         else :
-            key = cv2.waitKey(0) 
+            key = cv2.waitKey(0)
             key%=256
     print key
     return chr(key)
