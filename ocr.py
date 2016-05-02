@@ -43,3 +43,11 @@ def knnModel(training_features, training_classes, test_features):
 	temp_classes = result_classes.tolist()
 	flattened = [chr(int(val)) for sublist in temp_classes for val in sublist]
 	return flattened
+
+def SVMModel(training_features, training_classes, test_features):
+	svm = cv2.ml.SVM_create()
+	svm.train(training_features, cv2.ml.ROW_SAMPLE, numpy.array(training_classes, dtype = numpy.int32))
+	_,result_classes = svm.predict(test_features)
+	temp_classes = result_classes.tolist()
+	flattened = [chr(int(val)) for sublist in temp_classes for val in sublist]
+	return flattened
