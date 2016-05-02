@@ -1,16 +1,8 @@
 import numpy
 from preprocessor import preprocess
 import cv2
-from files import load_data_from_file
-import os
+from files import load_data_from_file, read_image
 from extractor import get_feature_list
-
-def read_image(image) :
-	img_path,extension=os.path.splitext("%s" % image) #splits the image path and the extension
-	img_name= os.path.basename(img_path) #extracts the filename from an extension
-	txt_file = img_path + ".txt"    # .txt file that will be used to hold features of the image
-	image = cv2.imread("%s" % image)
-	return image, txt_file
 
 
 def train(train_images) :

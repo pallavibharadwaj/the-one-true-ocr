@@ -1,9 +1,13 @@
 import cv2
 import numpy
 from extractor import get_feature_list, get_class_list
+import os
+from preprocessor import preprocess
 
-
-def generate_ground_data(img_txt,image,copy, segments):
+def generate_ground_data(image_path):
+    image ,img_txt = read_image(image_path)
+    copy = image.copy()
+    image,segments = preprocess(image)
     feature_list= get_feature_list(image, segments)
     classes_list = get_class_list(copy, segments)
     with open("%s" % img_txt, 'wb') as test:
@@ -20,3 +24,10 @@ def load_data_from_file(img_txt):
     features = numpy.asarray(features, dtype=numpy.float32)
     classes = numpy.asarray(classes, dtype=numpy.float32)
     return classes, features
+
+def read_image(image) :
+	img_path,extension=os.path.splitext("%s" % image) #splits the image path and the extension
+	img_name= os.path.basename(img_path) #extracts the filename from an extension
+	txt_file = img_path + ".txt"    # .txt file that will be used to hold features of the image
+	image = cv2.imread("%s" % image)
+	return image, txt_file
