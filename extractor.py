@@ -24,27 +24,29 @@ def find_eular_and_inner_segments(segments):
                 continue
             x, y, w, h = segment
             if (
-                x > x1 and
-                x < x2 and
-                y > y1 and
-                y < y2 and
-                x+w > x1 and
-                x+w < x2 and
-                y+h > y1 and
-                y+h < y2
-            ):
+                x >= x1 and
+                x <= x2 and
+                y >= y1 and
+                y <= y2 and
+                x+w >= x1 and
+                x+w <= x2 and
+                y+h >= y1 and
+                y+h <= y2
+            ) :
                 flag = flag+1
                 if flag != 0:
                     inner_segments.append(segment)
             counter=counter+1
         eular_number = 1-flag
         eular_list.append(eular_number)
+    print inner_segments
     return eular_list, inner_segments
 
 def find_total_on_pixels(image, segment):
     '''Finding the total number of on_pixels in a segment'''
     on_pixel = 0
     x, y, w, h = segment
+    #print "on_pixel : ",segment
     for i in range(y, y+h):
         for j in range(x, x+w):
             pixel_intensity = image[i, j]  # white(255) or black(0)
