@@ -4,7 +4,7 @@ import numpy
 from segmentation import segments_to_numpy
 
 
-def find_eular_and_inner_segments(segments):
+def find_eular_and_inner_segments(segments,return_flag):
     '''Finding the Euler Numbers and inner_segments for the given image or set of segments'''
     xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
     xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
@@ -39,8 +39,11 @@ def find_eular_and_inner_segments(segments):
             counter=counter+1
         eular_number = 1-flag
         eular_list.append(eular_number)
-    print inner_segments
-    return eular_list, inner_segments
+    print "eular list ::",eular_list
+    if return_flag==1 :
+        return eular_list, inner_segments
+    else :
+        return inner_segments
 
 def find_total_on_pixels(image, segment):
     '''Finding the total number of on_pixels in a segment'''
@@ -120,7 +123,7 @@ def get_feature_list(image ,segments):
     xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     feature_list = []
     classes_list = []
-    eular_list, inner_segments= find_eular_and_inner_segments(segments)
+    eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
     #add code to remove inner segments
     segment_count = 0
     for each_segment in segments:
@@ -156,7 +159,7 @@ def get_class_list(image,segments):
     xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
     xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     classes_list = []
-    eular_list, inner_segments= find_eular_and_inner_segments(segments)
+    eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
     #add code to remove inner segments
     segment_count = 0
     for each_segment in segments:

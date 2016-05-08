@@ -1,5 +1,6 @@
 import cv2
 from segmentation import segments_to_numpy, draw_segments,segment_blocks
+from extractor import find_eular_and_inner_segments
 def preprocess_with_display(image):
     copy = image.copy()
     cv2.imshow('Display', image)
@@ -34,7 +35,8 @@ def preprocess_with_display(image):
     cv2.waitKey(0)
     contours.reverse()
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
-    segments=segment_blocks(segments)
+    inner_segments=find_eular_and_inner_segments(segments,0)
+    segments=segment_blocks(segments,inner_segments)
     draw_segments(copy, segments)
     '''Draw the segments on the copy image (cant add color to greyscaled image)'''
     cv2.imshow('Display', copy)
@@ -64,5 +66,6 @@ def preprocess(image):
     ''' Drawing the contours on the image before displaying'''
     contours.reverse()
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
-    segments=segment_blocks(segments)
+    inner_segments=find_eular_and_inner_segments(segments,0)
+    segments=segment_blocks(segments,inner_segments)
     return image, segments

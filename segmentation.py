@@ -28,7 +28,7 @@ def draw_individual_segment(image, segment, color=(0, 0, 255), line_width=1):
     cv2.imshow('Display', copy_image)
 
 
-def segment_blocks(segments):
+def segment_blocks(segments,inner_segments):
     segment_block_list = []
     segment_blocks=[]
     ordered_segments=numpy.empty([0,4],int)
@@ -36,13 +36,16 @@ def segment_blocks(segments):
     min_y=start_y
     max_y=start_y+segments[1][3]
     bad_flag=0
-    #counter=0
-    #print "------------------------------------"
     for each_segment in segments :
-        #counter+=1
-        #print "count :",counter
-        #write code to check if there is a segment immediately below a given segment
         x,y,w,h = each_segment
+        loop_flag=0
+        for inner in inner_segments:
+            x2,y2,w2,h2=inner
+            if([x,y,w,h]==[x2,y2,w2,h2]):
+                loop_flag=1
+                break
+        if loop_flag>0:
+            continue
         loop_flag=0
         for segment in segments :
             x1,y1,w1,h1=segment
