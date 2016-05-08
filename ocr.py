@@ -11,7 +11,7 @@ def train(train_images) :
 	segments = []
 	txt_files = []
 	class_list = numpy.empty(shape=[0,])
-	feature_list= numpy.empty(shape=[0,13])
+	feature_list= numpy.empty(shape=[0,9])
 
 	for image in train_images :
 		image , txt_file = read_image(image)	#reading training images

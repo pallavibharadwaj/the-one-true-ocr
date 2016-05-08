@@ -93,7 +93,7 @@ def extract_coordinate_based_features(image, on_pixel, segment):
     xxy_mean = xxy_sum/on_pixel
     yyx_mean = yyx_sum/on_pixel
     return ([
-        horizontal_mean, x, y, w, h, vertical_mean, horizontal_variance,
+        horizontal_mean, vertical_mean, horizontal_variance,
         vertical_variance, xy_correlation_mean, xxy_mean, yyx_mean
     ])
 
