@@ -36,7 +36,11 @@ def segment_blocks(segments):
     min_y=start_y
     max_y=start_y+segments[1][3]
     bad_flag=0
+    #counter=0
+    #print "------------------------------------"
     for each_segment in segments :
+        #counter+=1
+        #print "count :",counter
         #write code to check if there is a segment immediately below a given segment
         x,y,w,h = each_segment
         loop_flag=0
@@ -44,17 +48,19 @@ def segment_blocks(segments):
             x1,y1,w1,h1=segment
             if (x==x1 and y==y1 and w==w1 and h==h1):
                 continue
-            if (y+h)==y1:
+            if (y+h)==y1 or ( y1>(y+h) and y1<(y+h+5) ):
                 loop_flag+=1
                 break
         if loop_flag>0:
             continue
         if y==min_y or y<=max_y :
+            bad_flag=0
             each_segment[1]=min_y
             each_segment[3]=max_y-min_y
             segment_blocks.append(each_segment)
         else :
             segment_block_list.append(segment_blocks)
+            #print "segment block :",len(segment_blocks)
             segment_blocks=[]
             min_y=y
             max_y=y+h
