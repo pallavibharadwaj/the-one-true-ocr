@@ -5,7 +5,7 @@ from files import load_data_from_file, read_image
 from extractor import get_feature_list
 
 
-def train(train_images) :
+def train(train_images):
 	train_image_names = []
 	image = []
 	segments = []
@@ -13,7 +13,7 @@ def train(train_images) :
 	class_list = numpy.empty(shape=[0,])
 	feature_list= numpy.empty(shape=[0,13])
 
-	for image in train_images :
+	for image in train_images:
 		image , txt_file = read_image(image)	#reading training images
 		copy=image.copy()
 		image, segments = preprocess(image)
