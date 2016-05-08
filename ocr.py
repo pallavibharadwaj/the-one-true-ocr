@@ -3,7 +3,8 @@ from preprocessor import preprocess
 import cv2
 from files import load_data_from_file, read_image
 from extractor import get_feature_list
-
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
 
 def train(train_images):
 	train_image_names = []
@@ -37,17 +38,15 @@ def test(image):
 	return test_feature_list
 
 def knnModel(training_features, training_classes, test_features):
-	knn = cv2.ml.KNearest_create()
-	knn.train(training_features, cv2.ml.ROW_SAMPLE, training_classes)
-	retval, result_classes, neigh_resp, dists = knn.findNearest(test_features, k = 1)
-	temp_classes = result_classes.tolist()
-	flattened = [chr(int(val)) for sublist in temp_classes for val in sublist]
-	return flattened
+	knn = KNeighborsClassifier(n_neighbors=1)
+	knn.fit(training_features, training_classes)
+	results = knn.predict(test_features)
+	results = [chr(int(val)) for val in results]
+	return results
 
 def SVMModel(training_features, training_classes, test_features):
-	svm = cv2.ml.SVM_create()
-	svm.train(training_features, cv2.ml.ROW_SAMPLE, numpy.array(training_classes, dtype = numpy.int32))
-	_,result_classes = svm.predict(test_features)
-	temp_classes = result_classes.tolist()
-	flattened = [chr(int(val)) for sublist in temp_classes for val in sublist]
-	return flattened
+	svm = SVC()
+	svm.fit(training_features,training_classes)
+	result_classes = svm.predict(test_features)
+	results = [chr(int(val)) for val in result_classes]
+	return results
