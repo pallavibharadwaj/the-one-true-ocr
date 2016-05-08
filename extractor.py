@@ -40,7 +40,6 @@ def find_eular_and_inner_segments(segments,return_flag):
         eular_number = 1-flag
         seg_key = str(each_segment.tolist())
         eular_list[seg_key] = eular_number
-    print "eular list ::",eular_list
     if return_flag==1 :
         return eular_list, inner_segments
     else :
@@ -50,7 +49,6 @@ def find_total_on_pixels(image, segment):
     '''Finding the total number of on_pixels in a segment'''
     on_pixel = 0
     x, y, w, h = segment
-    #print "on_pixel : ",segment
     for i in range(y, y+h):
         for j in range(x, x+w):
             pixel_intensity = image[i, j]  # white(255) or black(0)
@@ -115,7 +113,6 @@ def get_char(image, segment):
         else :
             key = cv2.waitKey(0)
             key%=256
-    print key
     return chr(key)
 
 

@@ -23,7 +23,6 @@ def draw_individual_segment(image, segment, color=(0, 0, 255), line_width=1):
     '''draws a rectangle around the current segment'''
     x, y, w, h = segment
     copy_image = image.copy()
-    print segment
     cv2.rectangle(copy_image, (x, y), (x+w, y+h), color, line_width)
     cv2.imshow('Display', copy_image)
 
@@ -63,7 +62,6 @@ def segment_blocks(segments,inner_segments):
             segment_blocks.append(each_segment)
         else :
             segment_block_list.append(segment_blocks)
-            #print "segment block :",len(segment_blocks)
             segment_blocks=[]
             min_y=y
             max_y=y+h
@@ -78,6 +76,7 @@ def segment_blocks(segments,inner_segments):
         segment_block_list[each_block]=numpy.array(segment_block_list[each_block], ndmin=2)
         segment_block_list[each_block]=order_segments(segment_block_list[each_block])
         ordered_segments=numpy.concatenate((ordered_segments,segment_block_list[each_block]))
+    ordered_segments= numpy.concatenate((ordered_segments,inner_segments))
     return ordered_segments
 
 def order_segments(segments) :

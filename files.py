@@ -10,9 +10,9 @@ def generate_ground_data(image_path):
     image,segments = preprocess(image)
     feature_list= get_feature_list(image, segments)
     classes_list = get_class_list(copy, segments)
-    #with open("%s" % img_txt, 'wb') as test:
-    #    for char,feature in zip(classes_list, feature_list):
-    #        test.write("%s %s\n" % (chr(char), ' '.join(map(str, feature))))
+    with open("%s" % img_txt, 'wb') as test:
+        for char,feature in zip(classes_list, feature_list):
+            test.write("%s %s\n" % (chr(char), ' '.join(map(str, feature))))
 
 
 def load_data_from_file(img_txt):
