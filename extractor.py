@@ -8,7 +8,7 @@ def find_eular_and_inner_segments(segments):
     '''Finding the Euler Numbers and inner_segments for the given image or set of segments'''
     xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
     xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
-    eular_list = []
+    eular_list = {}
     inner_segments = []
     for each_segment in segments:
         if (each_segment == [xmin, ymin, wmax, hmax]).all():
@@ -38,7 +38,8 @@ def find_eular_and_inner_segments(segments):
                     inner_segments.append(segment)
             counter=counter+1
         eular_number = 1-flag
-        eular_list.append(eular_number)
+        seg_key = str(each_segment.tolist())
+        eular_list[seg_key] = eular_number
     return eular_list, inner_segments
 
 def find_total_on_pixels(image, segment):
@@ -134,7 +135,8 @@ def get_feature_list(image ,segments):
         if (each_segment == [xmin, ymin, wmax, hmax]).all():
             # Skipping the large segment
             continue
-        eular_number = eular_list[segment_count]
+        seg_key = str(each_segment.tolist())
+        eular_number = eular_list[seg_key]
         segment_count+=1
         on_pixel = find_total_on_pixels(image, each_segment)
         if on_pixel == 0 :
