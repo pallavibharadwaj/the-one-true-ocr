@@ -31,9 +31,9 @@ def segment_blocks(segments,inner_segments):
     segment_block_list = []
     segment_blocks=[]
     ordered_segments=numpy.empty([0,4],int)
-    start_y=segments[1][1]
+    start_y=segments[0][1]
     min_y=start_y
-    max_y=start_y+segments[1][3]
+    max_y=start_y+segments[0][3]
     bad_flag=0
     for each_segment in segments :
         x,y,w,h = each_segment
