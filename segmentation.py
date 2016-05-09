@@ -50,12 +50,12 @@ def segment_blocks(segments,inner_segments):
             x1,y1,w1,h1=segment
             if (x==x1 and y==y1 and w==w1 and h==h1):
                 continue
-            if (y+h)==y1 or ( y1>(y+h) and y1<(y+h+5) ):
+            if (y+h)==y1 :
                 loop_flag+=1
                 break
         if loop_flag>0:
             continue
-        if y==min_y or y<=max_y :
+        if y>=min_y and y<max_y :
             bad_flag=0
             each_segment[1]=min_y
             each_segment[3]=max_y-min_y

@@ -6,13 +6,13 @@ from segmentation import segments_to_numpy
 
 def find_eular_and_inner_segments(segments,return_flag):
     '''Finding the Euler Numbers and inner_segments for the given image or set of segments'''
-    xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
-    xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
+    #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
+    #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     eular_list = {}
     inner_segments = []
     for each_segment in segments:
-        if (each_segment == [xmin, ymin, wmax, hmax]).all():
-            continue
+        #if (each_segment == [xmin, ymin, wmax, hmax]).all():
+        #    continue
         flag = 0
         counter=0
         x1, y1, w1, h1 = each_segment
@@ -117,8 +117,8 @@ def get_char(image, segment):
 
 
 def get_feature_list(image ,segments):
-    xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
-    xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
+    #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
+    #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     feature_list = []
     classes_list = []
     eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
@@ -134,9 +134,9 @@ def get_feature_list(image ,segments):
                 continue
         if(bad_flag==1):
             continue
-        if (each_segment == [xmin, ymin, wmax, hmax]).all():
+        #if (each_segment == [xmin, ymin, wmax, hmax]).all():
             # Skipping the large segment
-            continue
+         #   continue
         seg_key = str(each_segment.tolist())
         eular_number = eular_list[seg_key]
         segment_count+=1
@@ -155,8 +155,8 @@ def get_feature_list(image ,segments):
 
 
 def get_class_list(image,segments):
-    xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
-    xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
+    #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
+    #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     classes_list = []
     eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
     #add code to remove inner segments
@@ -171,9 +171,9 @@ def get_class_list(image,segments):
                 continue
         if(bad_flag==1):
             continue
-        if (each_segment == [xmin, ymin, wmax, hmax]).all():
-            # Skipping the large segment
-            continue
+        #if (each_segment == [xmin, ymin, wmax, hmax]).all():
+        #    # Skipping the large segment
+        #    continue
         char_data = get_char(image, each_segment)
         classes_list.append(ord(char_data))
     return classes_list

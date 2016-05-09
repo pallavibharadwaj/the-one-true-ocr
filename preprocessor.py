@@ -1,4 +1,5 @@
 import cv2
+import numpy
 from segmentation import segments_to_numpy, draw_segments,segment_blocks
 from extractor import find_eular_and_inner_segments
 def preprocess_with_display(image):
@@ -35,6 +36,7 @@ def preprocess_with_display(image):
     cv2.waitKey(0)
     contours.reverse()
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
+    segments=numpy.delete(segments,0,0)
     inner_segments=find_eular_and_inner_segments(segments,0)
     segments=segment_blocks(segments,inner_segments)
     draw_segments(copy, segments)
@@ -66,6 +68,7 @@ def preprocess(image):
     ''' Drawing the contours on the image before displaying'''
     contours.reverse()
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
+    segments=numpy.delete(segments,0,0)
     inner_segments=find_eular_and_inner_segments(segments,0)
     segments=segment_blocks(segments,inner_segments)
     return image, segments
