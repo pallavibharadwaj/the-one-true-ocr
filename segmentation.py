@@ -50,7 +50,7 @@ def segment_blocks(segments,inner_segments):
             x1,y1,w1,h1=segment
             if (x==x1 and y==y1 and w==w1 and h==h1):
                 continue
-            if (x>=x1) and ((x+w)<=(x1+w1)) and y<y1 :
+            if (x>=x1) and ((x+w-5)<=(x1+w1)) and y<y1 :
                 if (y+h+5)>=y1 :
                     loop_flag+=1
                     break
