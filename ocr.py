@@ -5,6 +5,7 @@ from files import load_data_from_file, read_image
 from extractor import get_feature_list
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
+import cPickle
 
 def train(train_images):
 	train_image_names = []
@@ -40,13 +41,21 @@ def test(image):
 def knnModel(training_features, training_classes, test_features):
 	knn = KNeighborsClassifier(n_neighbors=1)
 	knn.fit(training_features, training_classes)
+	f1  = open('data/KNNmodel.pkl', 'wb')
+	cPickle.dump(knn , f1 , protocol = cPickle.HIGHEST_PROTOCOL)
+	f1.close()
+	knn2 = cPickle.load(open('data/KNNmodel.pkl' , 'rb'))
 	results = knn.predict(test_features)
 	results = [chr(int(val)) for val in results]
 	return results
 
-def SVMModel(training_features, training_classes, test_features):
+def SvmModel(training_features, training_classes, test_features):
 	svm = SVC()
 	svm.fit(training_features,training_classes)
+	f2  = open('data/SVMmodel.pkl', 'wb')
+	cPickle.dump(svm , f2 , protocol = cPickle.HIGHEST_PROTOCOL)
+	f2.close()
+	svm2 = cPickle.load(open('data/SVMmodel.pkl' , 'rb'))
 	result_classes = svm.predict(test_features)
 	results = [chr(int(val)) for val in result_classes]
 	return results
