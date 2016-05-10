@@ -33,10 +33,10 @@ def test(image):
 	input_image,test_txt_file = read_image(image)	#input image to OCR
 	copy = input_image.copy()
 	input_image, segments2 , eular_list = preprocess(input_image) #preprocess of test image
-	test_feature_list = get_feature_list(input_image, segments2,eular_list)
+	test_feature_list,spaces_list = get_feature_list(input_image, segments2,eular_list)
 	test_feature_list =  numpy.asarray( test_feature_list, dtype=numpy.float32 )
 	cv2.imshow('Test Image', copy)
-	return test_feature_list
+	return test_feature_list,spaces_list
 
 def knnModel(training_features, training_classes, test_features):
 	knn = KNeighborsClassifier(n_neighbors=1)

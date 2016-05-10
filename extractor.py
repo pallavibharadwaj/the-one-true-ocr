@@ -121,6 +121,7 @@ def get_feature_list(image ,segments,eular_list):
     #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     feature_list = []
     classes_list = []
+    spaces_list = []
     #eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
     inner_segments=find_eular_and_inner_segments(segments,0)
     #add code to remove inner segments
@@ -152,7 +153,12 @@ def get_feature_list(image ,segments,eular_list):
         segment_features = [eular_number,on_pixel]+coordinate_features
         final_data = segment_features
         feature_list.append(final_data)
-    return feature_list
+
+    for i in range(len(segments)-1):
+        temp=segments[i+1][0]-(segments[i][0]+segments[i][2])
+        spaces_list.append(temp)
+    
+    return feature_list,spaces_list
 
 
 def get_class_list(image,segments,eular_list):

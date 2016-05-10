@@ -22,7 +22,7 @@ def draw_segments(image, segments, color=(255, 0, 0), line_width=1):
 def draw_individual_segment(image, segment, color=(0, 0, 255), line_width=1):
     '''draws a rectangle around the current segment'''
     x, y, w, h = segment
-    print segment
+    #print segment
     copy_image = image.copy()
     cv2.rectangle(copy_image, (x, y), (x+w, y+h), color, line_width)
     cv2.imshow('Display', copy_image)

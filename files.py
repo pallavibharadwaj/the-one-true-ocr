@@ -8,7 +8,7 @@ def generate_ground_data(image_path):
     image ,img_txt = read_image(image_path)
     copy = image.copy()
     image,segments,eular_list = preprocess(image)
-    feature_list= get_feature_list(image, segments , eular_list)
+    feature_list,spaces_list= get_feature_list(image, segments , eular_list)
     classes_list = get_class_list(copy, segments , eular_list)
     with open("%s" % img_txt, 'wb') as test:
         for char,feature in zip(classes_list, feature_list):
