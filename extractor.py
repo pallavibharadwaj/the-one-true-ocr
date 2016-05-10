@@ -116,12 +116,13 @@ def get_char(image, segment):
     return chr(key)
 
 
-def get_feature_list(image ,segments):
+def get_feature_list(image ,segments,eular_list):
     #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
     #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     feature_list = []
     classes_list = []
-    eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
+    #eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
+    inner_segments=find_eular_and_inner_segments(segments,0)
     #add code to remove inner segments
     segment_count = 0
     for each_segment in segments:
@@ -154,11 +155,12 @@ def get_feature_list(image ,segments):
     return feature_list
 
 
-def get_class_list(image,segments):
+def get_class_list(image,segments,eular_list):
     #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
     #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     classes_list = []
-    eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
+    #eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
+    inner_segments=find_eular_and_inner_segments(segments,0)
     #add code to remove inner segments
     segment_count = 0
     for each_segment in segments:
