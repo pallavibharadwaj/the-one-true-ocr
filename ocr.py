@@ -17,7 +17,6 @@ def train(train_images):
 
 	for image in train_images:
 		image , txt_file = read_image(image)	#reading training images
-		copy=image.copy()
 		classes,features = load_data_from_file(txt_file)
 		class_list = numpy.concatenate((class_list , classes), axis=0)
 		feature_list = numpy.concatenate((feature_list , features), axis=0)
@@ -68,9 +67,8 @@ def format_spaces(result,spaces_list,space_value=5):
 		iterate_value = result
 	for i in range(len(iterate_value)):
 		if newline_flag==1:
-			result_str= str(result[i])
+			result_str= ""
 			newline_flag=0
-			continue
 		if spaces_list[i]>0 and spaces_list[i]<=space_value :
 			result_str+=str(result[i])
 			newline_flag=0
