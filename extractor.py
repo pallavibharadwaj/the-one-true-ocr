@@ -94,10 +94,12 @@ def extract_coordinate_based_features(image, on_pixel, segment):
     xy_correlation_mean = xy_correlation_sum/on_pixel
     xxy_mean = xxy_sum/on_pixel
     yyx_mean = yyx_sum/on_pixel
-    return ([
+    edge_list = feature_extraction_edges(image,segment,on_pixel)
+    final_return_data = [
         horizontal_mean, vertical_mean, horizontal_variance,
-        vertical_variance, xy_correlation_mean, xxy_mean, yyx_mean
-    ])
+        vertical_variance, xy_correlation_mean, xxy_mean, yyx_mean]
+    final_return_data = final_return_data+edge_list
+    return ( final_return_data)
 
 
 def get_char(image, segment):
@@ -186,18 +188,33 @@ def get_class_list(image,segments,eular_list):
         classes_list.append(ord(char_data))
     return classes_list
 
-'''
-def horizontal_edge_features(segment):
-    on_pixel=0
+def feature_extraction_edges(image,segment,on_pixel):
+    counter=0.0
+    counter1=0.0
+    edge_list = []
     x,y,w,h=segment
-    for i in range(y, y+h) :
-        for j in  range(x, x+w) :
-            pixel_intensity= image[i,j]    #white(255) or black(0)
-            #if the pixel is black, find distance from the axis center
-            if pixel_intensity==0 :
-                if image[i-1][j]==255 :
-                    horizontal_edge_count+=1
+    horizontal_edge_dist_sum=0.0
+    vertical_edge_dist_sum=0.0
+    central_y_axis = x+w/2  # the line is where x = 0
+    central_x_axis = y+h/2
+    for i in range(y,y+h):
+        for j in range(x,x+w):
+            pixel_old=image[i,j]
+            next_horizontal_pixel=image[i,j+1]
+            if (pixel_old == 255) and (next_horizontal_pixel== 0) :
+                    counter+=1
                     horizontal_edge_dist=j-central_y_axis
                     horizontal_edge_dist_sum+=horizontal_edge_dist
-    horizontal_edge_dist_mean = horizontal_edge_dist_sum/horizontal_edge_count
-    return horizontal_edge_dist_mean'''
+    for j in range(x,x+w):
+        for i in range(y,y+h):
+            pixel_old_2=image[i,j]
+            next_vertical_pixel=image[i+1,j]
+            if (pixel_old_2 == 0) and (next_vertical_pixel== 255) :
+                    counter1+=1
+                    vertical_edge_dist=i-central_x_axis
+                    vertical_edge_dist_sum+=vertical_edge_dist
+    horizontal_mean_edge = counter/on_pixel
+    vertical_mean_edge = counter1/on_pixel
+    horizontal_edge_dist_mean = horizontal_edge_dist_sum/counter
+    vertical_edge_dist_mean = vertical_edge_dist_sum/counter1
+    return ([horizontal_mean_edge,vertical_mean_edge,vertical_edge_dist_mean, horizontal_edge_dist_mean])

@@ -13,7 +13,7 @@ def train(train_images):
 	segments = []
 	txt_files = []
 	class_list = numpy.empty(shape=[0,])
-	feature_list= numpy.empty(shape=[0,9])
+	feature_list= numpy.empty(shape=[0,13])
 
 	for image in train_images:
 		image , txt_file = read_image(image)	#reading training images
@@ -41,21 +41,21 @@ def test(image):
 def knnModel(training_features, training_classes, test_features):
 	knn = KNeighborsClassifier(n_neighbors=1)
 	knn.fit(training_features, training_classes)
-	f1  = open('data/KNNmodel.pkl', 'wb')
-	cPickle.dump(knn , f1 , protocol = cPickle.HIGHEST_PROTOCOL)
-	f1.close()
-	knn2 = cPickle.load(open('data/KNNmodel.pkl' , 'rb'))
+	#f1  = open('data/KNNmodel.pkl', 'wb')
+	#cPickle.dump(knn , f1 , protocol = cPickle.HIGHEST_PROTOCOL)
+	#f1.close()
+	#knn2 = cPickle.load(open('data/KNNmodel.pkl' , 'rb'))
 	results = knn.predict(test_features)
 	results = [chr(int(val)) for val in results]
 	return results
 
-def SvmModel(training_features, training_classes, test_features):
+def SVMModel(training_features, training_classes, test_features):
 	svm = SVC()
 	svm.fit(training_features,training_classes)
-	f2  = open('data/SVMmodel.pkl', 'wb')
-	cPickle.dump(svm , f2 , protocol = cPickle.HIGHEST_PROTOCOL)
-	f2.close()
-	svm2 = cPickle.load(open('data/SVMmodel.pkl' , 'rb'))
+	#f2  = open('data/SVMmodel.pkl', 'wb')
+	#cPickle.dump(svm , f2 , protocol = cPickle.HIGHEST_PROTOCOL)
+	#f2.close()
+	#svm2 = cPickle.load(open('data/SVMmodel.pkl' , 'rb'))
 	result_classes = svm.predict(test_features)
 	results = [chr(int(val)) for val in result_classes]
 	return results
