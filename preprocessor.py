@@ -45,7 +45,7 @@ def preprocess_with_display(image):
     cv2.imshow('Display', copy)
     print("After Segmentation")
     cv2.waitKey(0)
-    return image, segments , eular_list
+    return image, segments, eular_list
 
 
 def preprocess(image):

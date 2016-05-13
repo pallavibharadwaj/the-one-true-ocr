@@ -18,10 +18,7 @@ def train(train_images):
 	for image in train_images:
 		image , txt_file = read_image(image)	#reading training images
 		copy=image.copy()
-		image, segments , eular_list= preprocess(image)
 		classes,features = load_data_from_file(txt_file)
-		dimension = classes.shape
-		dimension1 = features.shape
 		class_list = numpy.concatenate((class_list , classes), axis=0)
 		feature_list = numpy.concatenate((feature_list , features), axis=0)
 

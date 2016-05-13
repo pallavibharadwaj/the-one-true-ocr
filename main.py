@@ -17,7 +17,7 @@ print result
 print result2
 print "Formatted results"
 print(format_spaces(result,spaces_list,10))
-print(format_spaces(result2,spaces_list))
+print(format_spaces(result2,spaces_list,10))
 #generate_ground_data("data/Agenda.png")
 cv2.waitKey(0)
 cv2.destroyAllWindows()

@@ -7,12 +7,13 @@ from ocr import train, test, knnModel, SVMModel
 parser = argparse.ArgumentParser()
 # in_image = "data/alpha2.png"
 # test_feature_list = test(in_image)
-train_images = "data/alpha.png", "data/alpha2.png"
+train_images = ["data/alpha.png"]
 class_list, feature_list = train(train_images)
+
 parser.add_argument("-m", "--model", default="knn", help="Decide model to be used")
 parser.add_argument("image", help="Choose image to be used run OCR on")
 args = parser.parse_args()
-test_feature_list = test(args.image)
+test_feature_list,_ = test(args.image)
 if (args.model == "knn") | (args.model == "KNN"):
     result = knnModel(feature_list, class_list, test_feature_list)
     print result
