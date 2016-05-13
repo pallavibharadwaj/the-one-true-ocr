@@ -32,6 +32,7 @@ def segment_blocks(segments,inner_segments,eular_list):
     segment_block_list = []
     segment_blocks=[]
     modified_eular_list={}
+    xmax,ymax,wmax,hmax = numpy.amax(segments,axis=0)
     ordered_segments=numpy.empty([0,4],int)
     start_y=segments[0][1]
     min_y=start_y
@@ -73,7 +74,7 @@ def segment_blocks(segments,inner_segments,eular_list):
             bad_flag=0
             old_key=str(each_segment.tolist())
             each_segment[1]=min_y
-            each_segment[3]=max_y-min_y
+            each_segment[3]=hmax
             new_key=str(each_segment.tolist())
             modified_eular_list[new_key]=eular_list[old_key]
             #print "new :",each_segment
@@ -87,7 +88,7 @@ def segment_blocks(segments,inner_segments,eular_list):
             max_y=y+h
             old_key=str(each_segment.tolist())
             each_segment[1]=min_y
-            each_segment[3]=max_y-min_y
+            each_segment[3]=hmax
             new_key=str(each_segment.tolist())
             modified_eular_list[new_key]=eular_list[old_key]
             segment_blocks.append(each_segment)

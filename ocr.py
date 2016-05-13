@@ -75,7 +75,7 @@ def format_spaces(result,spaces_list,space_value=5):
 			result_str+=str(result[i])
 			newline_flag=0
 		elif spaces_list[i]>space_value:
-			result_str+="  "+str(result[i])
+			result_str+=str(result[i])+"  "
 			newline_flag=0
 		elif spaces_list[i]<0:
 			result_str+=str(result[i]) # Add last char of each line
