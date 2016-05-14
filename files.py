@@ -2,13 +2,13 @@ import cv2
 import numpy
 from extractor import get_feature_list, get_class_list
 import os
-from preprocessor import preprocess
+from preprocessor import preprocess,preprocess_with_display
 
 def generate_ground_data(image_path):
     image ,img_txt = read_image(image_path)
     copy = image.copy()
-    image,segments,eular_list = preprocess(image)
-    feature_list,spaces_list= get_feature_list(image, segments , eular_list)
+    image,segments,eular_list,central_x,central_y = preprocess_with_display(image)
+    feature_list,spaces_list= get_feature_list(image, segments , eular_list,central_x,central_y)
     classes_list = get_class_list(copy, segments , eular_list)
     with open("%s" % img_txt, 'wb') as test:
         for char,feature in zip(classes_list, feature_list):

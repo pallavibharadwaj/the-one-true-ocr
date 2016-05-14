@@ -32,6 +32,8 @@ def segment_blocks(segments,inner_segments,eular_list):
     segment_block_list = []
     segment_blocks=[]
     modified_eular_list={}
+    central_y={}
+    central_x={}
     xmax,ymax,wmax,hmax = numpy.amax(segments,axis=0)
     ordered_segments=numpy.empty([0,4],int)
     start_y=segments[0][1]
@@ -42,6 +44,10 @@ def segment_blocks(segments,inner_segments,eular_list):
     for each_segment in segments :
         #print "each_segment :",each_segment
         x,y,w,h = each_segment
+        central_y_axis=x+w/2
+        central_x_axis=y+h/2
+        #print "h::"+str(h)+"x::"+str(y)
+        #print "central x",central_x_axis
         if(valid==0) :
             min_y=y
             max_y=y+h
@@ -70,6 +76,7 @@ def segment_blocks(segments,inner_segments,eular_list):
             continue
         if y>=min_y and y<max_y :
             #print "valid"
+            #print "inside ::",central_x_axis
             valid=valid+1
             bad_flag=0
             old_key=str(each_segment.tolist())
@@ -77,10 +84,13 @@ def segment_blocks(segments,inner_segments,eular_list):
             each_segment[3]=hmax
             new_key=str(each_segment.tolist())
             modified_eular_list[new_key]=eular_list[old_key]
+            central_x[new_key]=central_x_axis
+            central_y[new_key]=central_y_axis
             #print "new :",each_segment
             segment_blocks.append(each_segment)
         else :
             #print "valid"
+            #print "inside ::",central_x_axis
             valid=valid+1
             segment_block_list.append(segment_blocks)
             segment_blocks=[]
@@ -92,6 +102,8 @@ def segment_blocks(segments,inner_segments,eular_list):
             new_key=str(each_segment.tolist())
             modified_eular_list[new_key]=eular_list[old_key]
             segment_blocks.append(each_segment)
+            central_x[new_key]=central_x_axis
+            central_y[new_key]=central_y_axis
             #print "new :",each_segment
             bad_flag+=1
             continue
@@ -101,7 +113,7 @@ def segment_blocks(segments,inner_segments,eular_list):
         segment_block_list[each_block]=numpy.array(segment_block_list[each_block], ndmin=2)
         segment_block_list[each_block]=order_segments(segment_block_list[each_block])
         ordered_segments=numpy.concatenate((ordered_segments,segment_block_list[each_block]))
-    return ordered_segments,modified_eular_list
+    return ordered_segments,modified_eular_list,central_x,central_y
 
 def order_segments(segments) :
     segments.view('i8,i8,i8,i8').sort(order=['f0'], axis=0)
