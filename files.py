@@ -9,7 +9,7 @@ def generate_ground_data(image_path):
     copy = image.copy()
     image,segments,euler_list,central_x,central_y = preprocess(image)
     feature_list,spaces_list= get_feature_list(image, segments , euler_list,central_x,central_y)
-    classes_list = get_class_list(copy, segments , euler_list)
+    classes_list = get_class_list(copy, segments)
     with open("%s" % img_txt, 'wb') as test:
         for char,feature in zip(classes_list, feature_list):
             test.write("%s %s\n" % (chr(char), ' '.join(map(str, feature))))

@@ -37,10 +37,8 @@ def preprocess_with_display(image):
     contours.reverse()
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
     segments=numpy.delete(segments,0,0)
-    #print "original segments ::",segments
     euler_list,inner_segments=find_euler_and_inner_segments(segments,1)
     segments,euler_list,central_x,central_y=segment_blocks(segments,inner_segments,euler_list)
-    #print "inner_segments :",len(inner_segments)
     draw_segments(copy, segments)
     '''Draw the segments on the copy image (cant add color to greyscaled image)'''
     cv2.imshow('Display', copy)
@@ -70,7 +68,6 @@ def preprocess(image):
     contours.reverse()
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
     segments=numpy.delete(segments,0,0)
-    #print "original segments ::",segments
     euler_list,inner_segments=find_euler_and_inner_segments(segments,1)
     segments,euler_list,central_x,central_y=segment_blocks(segments,inner_segments,euler_list)
     return image, segments , euler_list, central_x,central_y

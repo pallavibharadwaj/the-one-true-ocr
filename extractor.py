@@ -6,13 +6,9 @@ from segmentation import segments_to_numpy
 
 def find_euler_and_inner_segments(segments,return_flag):
     '''Finding the Euler Numbers and inner_segments for the given image or set of segments'''
-    #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
-    #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     euler_list = {}
     inner_segments = []
     for each_segment in segments:
-        #if (each_segment == [xmin, ymin, wmax, hmax]).all():
-        #    continue
         flag = 0
         counter=0
         x1, y1, w1, h1 = each_segment
@@ -71,7 +67,6 @@ def extract_coordinate_based_features(image, on_pixel, segment ,org_x):
     xxy_sum = 0.0
     yyx_sum = 0.0
     central_y_axis = x+w/2  # the line is where x = 0
-    #central_x_axis = y+h/2  # the line is where y = 0
     central_x_axis=org_x[str(segment.tolist())]
     central_y.append(central_y_axis)
     central_x.append(central_x_axis)
@@ -124,14 +119,11 @@ def get_char(image, segment):
 
 
 def get_feature_list(image ,segments,euler_list,org_x,org_y):
-    #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
-    #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     feature_list = []
     classes_list = []
     spaces_list = []#
     before_x=[]
     before_y=[]
-    #euler_list, inner_segments= find_euler_and_inner_segments(segments,1)
     inner_segments=find_euler_and_inner_segments(segments,0)
     #add code to remove inner segments
     segment_count = 0
@@ -145,9 +137,6 @@ def get_feature_list(image ,segments,euler_list,org_x,org_y):
                 continue
         if(bad_flag==1):
             continue
-        #if (each_segment == [xmin, ymin, wmax, hmax]).all():
-            # Skipping the large segment
-         #   continue
         seg_key = str(each_segment.tolist())
         euler_number = euler_list[seg_key]
         segment_count+=1
@@ -168,19 +157,11 @@ def get_feature_list(image ,segments,euler_list,org_x,org_y):
     for i in range(len(segments)-1):
         temp=segments[i+1][0]-(segments[i][0]+segments[i][2])
         spaces_list.append(temp)
-    #print "central_y_axis before boosting ::",before_y
-    #print "central y axis after boosting::",central_y
-
-    #print "central_x_axis before boosting ::",before_x
-    #print "central x axis after boosting ::",central_x
     return feature_list,spaces_list
 
 
-def get_class_list(image,segments,euler_list):
-    #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
-    #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
+def get_class_list(image,segments):
     classes_list = []
-    #euler_list, inner_segments= find_euler_and_inner_segments(segments,1)
     inner_segments=find_euler_and_inner_segments(segments,0)
     #add code to remove inner segments
     segment_count = 0
@@ -194,9 +175,6 @@ def get_class_list(image,segments,euler_list):
                 continue
         if(bad_flag==1):
             continue
-        #if (each_segment == [xmin, ymin, wmax, hmax]).all():
-        #    # Skipping the large segment
-        #    continue
         char_data = get_char(image, each_segment)
         classes_list.append(ord(char_data))
     return classes_list

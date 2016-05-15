@@ -22,7 +22,6 @@ def draw_segments(image, segments, color=(255, 0, 0), line_width=1):
 def draw_individual_segment(image, segment, color=(0, 0, 255), line_width=1):
     '''draws a rectangle around the current segment'''
     x, y, w, h = segment
-    #print segment
     copy_image = image.copy()
     cv2.rectangle(copy_image, (x, y), (x+w, y+h), color, line_width)
     cv2.imshow('Display', copy_image)
@@ -42,21 +41,16 @@ def segment_blocks(segments,inner_segments,euler_list):
     bad_flag=0
     valid=0
     for each_segment in segments :
-        #print "each_segment :",each_segment
         x,y,w,h = each_segment
         central_y_axis=x+w/2
         central_x_axis=y+h/2
-        #print "h::"+str(h)+"x::"+str(y)
-        #print "central x",central_x_axis
         if(valid==0) :
             min_y=y
             max_y=y+h
-        #counter=counter+1
         loop_flag=0
         for inner in inner_segments:
             x2,y2,w2,h2=inner
             if([x,y,w,h]==[x2,y2,w2,h2]):
-                #print "inner"
                 loop_flag=1
                 break
         if loop_flag>0:
@@ -68,15 +62,11 @@ def segment_blocks(segments,inner_segments,euler_list):
                 continue
             if ((x>=x1) and ((x+w-5)<=(x1+w1)) and y<y1) or (y+h)==y1 :
                 if (y+h+5)>=y1 :
-                    #print "anomaly"
-                    #anomaly=anomaly+1
                     loop_flag+=1
                     break
         if loop_flag>0:
             continue
         if y>=min_y and y<max_y :
-            #print "valid"
-            #print "inside ::",central_x_axis
             valid=valid+1
             bad_flag=0
             old_key=str(each_segment.tolist())
@@ -86,11 +76,8 @@ def segment_blocks(segments,inner_segments,euler_list):
             modified_euler_list[new_key]=euler_list[old_key]
             central_x[new_key]=central_x_axis
             central_y[new_key]=central_y_axis
-            #print "new :",each_segment
             segment_blocks.append(each_segment)
         else :
-            #print "valid"
-            #print "inside ::",central_x_axis
             valid=valid+1
             segment_block_list.append(segment_blocks)
             segment_blocks=[]
@@ -104,7 +91,6 @@ def segment_blocks(segments,inner_segments,euler_list):
             segment_blocks.append(each_segment)
             central_x[new_key]=central_x_axis
             central_y[new_key]=central_y_axis
-            #print "new :",each_segment
             bad_flag+=1
             continue
     if bad_flag==0 :

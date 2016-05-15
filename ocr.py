@@ -93,12 +93,11 @@ def test_accuary(image,results):
 	test_results = [ord(x) for x in results]
 	count = 0.0
 	expected_classes = [int(x) for x in expected_classes.tolist()]
+	print("Differences:- Expected vs Results")
 	for i in range(0,total_chars):
 		if(expected_classes[i]==test_results[i]):
-	#		print(expected_classes[i],test_results[i])
 			count+=1
 		else:
 			print(chr(expected_classes[i]),chr(test_results[i]))
 	percentage = (count/total_chars)*100
-	#print(len(test_results),len(expected_classes))
 	print "Accuracy:-",percentage,"%"
