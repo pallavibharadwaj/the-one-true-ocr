@@ -1,7 +1,7 @@
 import cv2
 import numpy
 from segmentation import segments_to_numpy, draw_segments,segment_blocks
-from extractor import find_eular_and_inner_segments
+from extractor import find_euler_and_inner_segments
 def preprocess_with_display(image):
     copy = image.copy()
     cv2.imshow('Display', image)
@@ -38,15 +38,15 @@ def preprocess_with_display(image):
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
     segments=numpy.delete(segments,0,0)
     #print "original segments ::",segments
-    eular_list,inner_segments=find_eular_and_inner_segments(segments,1)
-    segments,eular_list,central_x,central_y=segment_blocks(segments,inner_segments,eular_list)
+    euler_list,inner_segments=find_euler_and_inner_segments(segments,1)
+    segments,euler_list,central_x,central_y=segment_blocks(segments,inner_segments,euler_list)
     #print "inner_segments :",len(inner_segments)
     draw_segments(copy, segments)
     '''Draw the segments on the copy image (cant add color to greyscaled image)'''
     cv2.imshow('Display', copy)
     print("After Segmentation")
     cv2.waitKey(0)
-    return image, segments, eular_list , central_x,central_y
+    return image, segments, euler_list , central_x,central_y
 
 def preprocess(image):
     image = cv2.GaussianBlur(image, (5, 5), 0)  # Blurring the image
@@ -71,6 +71,6 @@ def preprocess(image):
     segments = segments_to_numpy([cv2.boundingRect(c) for c in contours])
     segments=numpy.delete(segments,0,0)
     #print "original segments ::",segments
-    eular_list,inner_segments=find_eular_and_inner_segments(segments,1)
-    segments,eular_list,central_x,central_y=segment_blocks(segments,inner_segments,eular_list)
-    return image, segments , eular_list, central_x,central_y
+    euler_list,inner_segments=find_euler_and_inner_segments(segments,1)
+    segments,euler_list,central_x,central_y=segment_blocks(segments,inner_segments,euler_list)
+    return image, segments , euler_list, central_x,central_y

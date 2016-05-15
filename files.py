@@ -7,9 +7,9 @@ from preprocessor import preprocess,preprocess_with_display
 def generate_ground_data(image_path):
     image ,img_txt = read_image(image_path)
     copy = image.copy()
-    image,segments,eular_list,central_x,central_y = preprocess_with_display(image)
-    feature_list,spaces_list= get_feature_list(image, segments , eular_list,central_x,central_y)
-    classes_list = get_class_list(copy, segments , eular_list)
+    image,segments,euler_list,central_x,central_y = preprocess_with_display(image)
+    feature_list,spaces_list= get_feature_list(image, segments , euler_list,central_x,central_y)
+    classes_list = get_class_list(copy, segments , euler_list)
     with open("%s" % img_txt, 'wb') as test:
         for char,feature in zip(classes_list, feature_list):
             test.write("%s %s\n" % (chr(char), ' '.join(map(str, feature))))

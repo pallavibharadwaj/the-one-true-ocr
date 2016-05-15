@@ -28,8 +28,8 @@ def train(train_images):
 def test(image):
 	input_image,test_txt_file = read_image(image)	#input image to OCR
 	copy = input_image.copy()
-	input_image, segments2 , eular_list, central_x, central_y = preprocess(input_image) #preprocess of test image
-	test_feature_list,spaces_list = get_feature_list(input_image, segments2,eular_list,central_x,central_y)
+	input_image, segments2 , euler_list, central_x, central_y = preprocess(input_image) #preprocess of test image
+	test_feature_list,spaces_list = get_feature_list(input_image, segments2,euler_list,central_x,central_y)
 	test_feature_list =  numpy.asarray( test_feature_list, dtype=numpy.float32 )
 	cv2.imshow('Test Image', copy)
 	return test_feature_list,spaces_list
