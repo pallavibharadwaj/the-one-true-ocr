@@ -57,8 +57,10 @@ def find_total_on_pixels(image, segment):
                 on_pixel += 1
     return on_pixel
 
+central_y=[]
+central_x=[]
 
-def extract_coordinate_based_features(image, on_pixel, segment):
+def extract_coordinate_based_features(image, on_pixel, segment ,org_x):
     '''Finding all the features based of the x,y of on_pixels in a segment'''
     x, y, w, h = segment
     horizontal_sum = 0.0
@@ -69,7 +71,10 @@ def extract_coordinate_based_features(image, on_pixel, segment):
     xxy_sum = 0.0
     yyx_sum = 0.0
     central_y_axis = x+w/2  # the line is where x = 0
-    central_x_axis = y+h/2  # the line is where y = 0
+    #central_x_axis = y+h/2  # the line is where y = 0
+    central_x_axis=org_x[str(segment.tolist())]
+    central_y.append(central_y_axis)
+    central_x.append(central_x_axis)
     for i in range(y, y+h):
         for j in range(x, x+w):
             pixel_intensity = image[i, j]    # white(255) or black(0)
@@ -118,12 +123,14 @@ def get_char(image, segment):
     return chr(key)
 
 
-def get_feature_list(image ,segments,eular_list):
+def get_feature_list(image ,segments,eular_list,org_x,org_y):
     #xmin, ymin, wmin, hmin = numpy.amin(segments, axis=0)
     #xmax, ymax, wmax, hmax = numpy.amax(segments, axis=0)
     feature_list = []
     classes_list = []
-    spaces_list = []
+    spaces_list = []#
+    before_x=[]
+    before_y=[]
     #eular_list, inner_segments= find_eular_and_inner_segments(segments,1)
     inner_segments=find_eular_and_inner_segments(segments,0)
     #add code to remove inner segments
@@ -150,16 +157,22 @@ def get_feature_list(image ,segments,eular_list):
         coordinate_features = extract_coordinate_based_features(
             image,
             on_pixel,
-            each_segment)
+            each_segment,org_x)
         # Converting all the feature data into a tuple
         segment_features = [eular_number,on_pixel]+coordinate_features
         final_data = segment_features
         feature_list.append(final_data)
+        before_x.append(org_x[str(each_segment.tolist())])
+        before_y.append(org_y[str(each_segment.tolist())])
 
     for i in range(len(segments)-1):
         temp=segments[i+1][0]-(segments[i][0]+segments[i][2])
         spaces_list.append(temp)
+    #print "central_y_axis before boosting ::",before_y
+    #print "central y axis after boosting::",central_y
     
+    #print "central_x_axis before boosting ::",before_x
+    #print "central x axis after boosting ::",central_x
     return feature_list,spaces_list
 
 
