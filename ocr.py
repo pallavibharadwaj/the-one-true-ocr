@@ -86,7 +86,7 @@ def format_spaces(result,spaces_list,space_threshold=5):
 	final_string+=result[-1] # Last Character added to result
 	return final_string
 
-def test_accuary(image,results):
+def test_accuracy(image,results):
 	image , txt_file = read_image(image)
 	expected_classes,features = load_data_from_file(txt_file)
 	total_chars = len(expected_classes)

@@ -15,8 +15,8 @@ result2 = SVMModel(feature_list,class_list,test_feature_list)
 
 print(format_spaces(result,spaces_list,15))
 print(format_spaces(result2,spaces_list,15))
-#test_accuary("data/test/testImage8",result)
-#test_accuary("data/test/testImage8",result2)
+#test_accuracy("data/test/testImage8",result)
+#test_accuracy("data/test/testImage8",result2)
 '''
 generate_ground_data("data/test/testImage8.png")
 '''
