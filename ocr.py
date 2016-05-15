@@ -57,7 +57,7 @@ def SVMModel(training_features, training_classes, test_features):
 	return results
 
 
-def format_spaces(result,spaces_list,space_value=5):
+def format_spaces(result,spaces_list,space_threshold=5):
 	newline_flag=1
 	final_string = ""
 	if(len(spaces_list)<=len(result)):
@@ -69,10 +69,10 @@ def format_spaces(result,spaces_list,space_value=5):
 		if newline_flag==1:
 			result_str= ""
 			newline_flag=0
-		if spaces_list[i]>0 and spaces_list[i]<=space_value :
+		if spaces_list[i]>0 and spaces_list[i]<=space_threshold :
 			result_str+=str(result[i])
 			newline_flag=0
-		elif spaces_list[i]>space_value:
+		elif spaces_list[i]>space_threshold:
 			result_str+=str(result[i])+"  "
 			newline_flag=0
 		elif spaces_list[i]<0:
@@ -80,8 +80,25 @@ def format_spaces(result,spaces_list,space_value=5):
 			newline_flag=1
 			final_string+='\n'+ result_str
 
-	if(len(iterate_value)<len(result)):
+	if(len(iterate_value)<len(result) and spaces_list[-1]>0):
 		final_string+='\n'+result_str
 		# Add last lines to images with lower spaces
 	final_string+=result[-1] # Last Character added to result
 	return final_string
+
+def test_accuary(image,results):
+	image , txt_file = read_image(image)
+	expected_classes,features = load_data_from_file(txt_file)
+	total_chars = len(expected_classes)
+	test_results = [ord(x) for x in results]
+	count = 0.0
+	expected_classes = [int(x) for x in expected_classes.tolist()]
+	for i in range(0,total_chars):
+		if(expected_classes[i]==test_results[i]):
+	#		print(expected_classes[i],test_results[i])
+			count+=1
+		else:
+			print(chr(expected_classes[i]),chr(test_results[i]))
+	percentage = (count/total_chars)*100
+	#print(len(test_results),len(expected_classes))
+	print "Accuracy:-",percentage,"%"
