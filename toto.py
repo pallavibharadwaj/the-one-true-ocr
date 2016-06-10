@@ -12,7 +12,7 @@ class_list, feature_list = train(train_images)
 parser.add_argument("-m", "--model", default="knn", help="Decide model to be used")
 parser.add_argument("image", help="Choose image to be used run OCR on")
 parser.add_argument("-s","--space",default="10",help="Define space thresholds")
-parser.add_argument("--accuracy",action="store_true",help="Turn on accuracy display")
+parser.add_argument("-a","--accuracy",action="store_true",help="Turn on accuracy display")
 args = parser.parse_args()
 test_feature_list,spaces_list = test(args.image)
 if (args.model == "knn") | (args.model == "KNN"):
@@ -20,10 +20,12 @@ if (args.model == "knn") | (args.model == "KNN"):
     print format_spaces(result,spaces_list,int(args.space))
     if(args.accuracy):
         test_accuracy(args.image,result)
+    cv2.waitKey(0)
 elif (args.model == "SVM") | (args.model == "svm"):
     result = SVMModel(feature_list, class_list, test_feature_list)
     print format_spaces(result,spaces_list,int(args.space))
     if(args.accuracy):
         test_accuracy(args.image,result)
+    cv2.waitKey(0)
 else:
     print "Error, model not defined"
