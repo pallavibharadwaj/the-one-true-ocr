@@ -1,5 +1,5 @@
 import numpy
-from preprocessor import preprocess
+from preprocessor import preprocess, preprocess_with_display
 import cv2
 from files import load_data_from_file, read_image
 from extractor import get_feature_list
